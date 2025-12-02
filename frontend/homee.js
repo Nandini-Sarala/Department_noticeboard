@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const usn = document.getElementById('login-usn').value;
         const password = document.getElementById('login-password').value;
 
-        const res = await fetch('http://127.0.0.1:5000/login', {
+        const res = await fetch('https://department-noticeboard-4.onrender.com/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ usn, password })
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const usn = document.getElementById('admin-username').value;
         const password = document.getElementById('admin-password').value;
 
-        const res = await fetch('http://127.0.0.1:5000/login', {
+        const res = await fetch('https://department-noticeboard-4.onrender.com/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ usn, password })
@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         try {
-            const aiRes = await fetch("http://127.0.0.1:5000/api/categorize", {
+            const aiRes = await fetch("https://department-noticeboard-4.onrender.com/api/categorize", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ title, description, semester })
@@ -366,7 +366,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (imageFile) formData.append("image_file", imageFile); // append file
 
             // Save to backend
-            const saveRes = await fetch("http://127.0.0.1:5000/api/notices", {
+            const saveRes = await fetch("https://department-noticeboard-4.onrender.com/api/notices", {
                 method: "POST",
                 body: formData
             });
@@ -453,7 +453,7 @@ function appendNoticeToDOM(notice) {
     // Display uploaded file if exists
     if (notice.image_url) {
         const fileLink = document.createElement("a");
-        fileLink.href = `http://127.0.0.1:5000${notice.image_url}`;
+        fileLink.href = `https://department-noticeboard-4.onrender.com${notice.image_url}`;
         fileLink.target = "_blank";
 
         if (/exam_/i.test(notice.category) && /ia/i.test(notice.description.toLowerCase())) {
@@ -484,7 +484,7 @@ async function loadNotices() {
 
     for (const cat of categories) {
         try {
-            const res = await fetch(`http://127.0.0.1:5000/api/notices/${cat}`);
+            const res = await fetch(`https://department-noticeboard-4.onrender.com/api/notices/${cat}`);
 
             // Ensure backend responded correctly
             if (!res.ok) {
@@ -514,7 +514,7 @@ document.addEventListener("DOMContentLoaded", loadNotices);
 
 async function cleanupExpiredNoticesFromBackend() {
     try {
-        const res = await fetch("http://127.0.0.1:5000/api/cleanup_expired", {
+        const res = await fetch("https://department-noticeboard-4.onrender.com/api/cleanup_expired", {
             method: "DELETE",
         });
         const data = await res.json();
@@ -546,7 +546,7 @@ async function loadRecentNotices() {
 
     try {
         // http://127.0.0.1:5000
-        const res = await fetch("http://127.0.0.1:5000/api/notices/recent");
+        const res = await fetch("https://department-noticeboard-4.onrender.com/api/notices/recent");
         const notices = await res.json();
 
         if (!Array.isArray(notices) || notices.length === 0) {
