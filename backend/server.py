@@ -10,6 +10,7 @@ import mysql.connector
 from mysql.connector import pooling
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
+db_url = os.getenv("mysql://root:Root*19470@host:3306/department_db")
 
 # -----------------------
 # Flask App Setup
