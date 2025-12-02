@@ -10,7 +10,14 @@ import mysql.connector
 from mysql.connector import pooling
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
-db_url = os.getenv("mysql://root:Root*19470@host:3306/department_db")
+# Read DB configuration from environment variables. When deploying (e.g. Render),
+# set DB_HOST/DB_USER/DB_PASSWORD/DB_NAME/DB_PORT in the service settings.
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Root*19470")
+DB_NAME = os.getenv("DB_NAME", "department_db")
+DB_PORT = int(os.getenv("DB_PORT", "3306"))
+DB_AUTH_PLUGIN = os.getenv("DB_AUTH_PLUGIN", "mysql_native_password")
 
 # -----------------------
 # Flask App Setup
@@ -71,20 +78,31 @@ app.add_url_rule("/files/<path:filename>", "files",
 # -----------------------
 
 db_config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "Root*19470",
-    "database": "department_db",   # ✅ your single database
-    "auth_plugin": "mysql_native_password",
+    "host": DB_HOST,
+    "user": DB_USER,
+    "password": DB_PASSWORD,
+    "database": DB_NAME,
+    "port": DB_PORT,
+    "auth_plugin": DB_AUTH_PLUGIN,
 }
 
-connection_pool = mysql.connector.pooling.MySQLConnectionPool(
-    pool_name="department_pool",
-    pool_size=10,
-    **db_config
-)
+# Create a connection pool. If this fails (for example on Render when DB isn't
+# configured), the error will be printed to stdout so the platform logs show it.
+try:
+    connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+        pool_name="department_pool",
+        pool_size=10,
+        **db_config
+    )
+except Exception as e:
+    print("⚠️  Failed to create MySQL connection pool:", e)
+    connection_pool = None
 
 def get_connection():
+    if connection_pool is None:
+        raise RuntimeError(
+            "No database connection pool available. Check DB_* environment variables and ensure the DB is reachable."
+        )
     return connection_pool.get_connection()
 
 
