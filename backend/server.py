@@ -12,12 +12,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 # Read DB configuration from environment variables. When deploying (e.g. Render),
 # set DB_HOST/DB_USER/DB_PASSWORD/DB_NAME/DB_PORT in the service settings.
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Root*19470")
-DB_NAME = os.getenv("DB_NAME", "department_db")
-DB_PORT = int(os.getenv("DB_PORT", "3306"))
-DB_AUTH_PLUGIN = os.getenv("DB_AUTH_PLUGIN", "mysql_native_password")
+DB_HOST = os.getenv("crossover.proxy.rlwy.net")
+DB_USER = os.getenv("root")
+DB_PASSWORD = os.getenv("oRXwKpmeRgIGUBVNSHEoypfMUdTQhKNG")
+DB_NAME = os.getenv("railway")
+DB_PORT = int(os.getenv("20364"))
+DB_AUTH_PLUGIN = os.getenv("mysql_native_password")
 
 # -----------------------
 # Flask App Setup
