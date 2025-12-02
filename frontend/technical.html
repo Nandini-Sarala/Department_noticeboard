@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technical Notices</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 min-h-screen flex flex-col items-center">
+
+  <h1 class="text-4xl font-bold text-green-700 mt-8 mb-6">Technical Notices</h1>
+
+  <div id="noticeContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full px-6 mb-12"></div>
+
+  <div class="mb-10">
+    <a href="home.html" class="text-green-700 font-medium hover:underline text-lg">← Back to Notice Board</a>
+  </div>
+
+  <script>
+    async function loadTechnicalNotices() {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/api/notices/technical");
+        const notices = await res.json();
+        const container = document.getElementById("noticeContainer");
+        container.innerHTML = "";
+
+        notices.forEach(n => {
+          const card = document.createElement("div");
+          card.className = "bg-white rounded-3xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 hover:scale-105 p-8 border border-gray-100 text-center";
+         let content = `<h2 class="text-2xl font-bold text-green-700 mb-4">${n.title}</h2>
+                   <p class="text-gray-600 text-lg mb-2">${n.description}</p>`;
+
+          if (n.image_url) {
+            content += `<img src="http://127.0.0.1:5000${n.image_url}" alt="${n.title}" class="w-full h-48 object-cover rounded-lg mb-2">`;
+          }
+          if (n.expiry_date) {
+            content += `<div class="text-sm text-red-600">Expires: ${n.expiry_date}</div>`;
+          }
+          card.innerHTML = content;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Error Technical notices:", err);
+      }
+    }
+    document.addEventListener("DOMContentLoaded", loadTechnicalNotices);
+  </script>
+</body>
+</html>

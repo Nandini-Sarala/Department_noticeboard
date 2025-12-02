@@ -1,0 +1,94 @@
+{
+
+  "source": "https://klsvdit.edu.in/about-2/faculty-of-computer-science-and-engineering/",
+  "data": [
+    {
+      "name": "Dr. Venkatesh S.",
+      "designation": "Professor and Head of the Department",
+      "email": "vss@klsvdit.edu.in",
+      "phone": "9730332744",
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/08/VENKATESH.jpg",
+      "profile": "https://in.linkedin.com/in/farzana-nadaf-a1794918"
+    },
+    {
+      "name": "Dr. Shrinivas Sirdeshpande",
+      "designation": "Professor",
+      "email": "sas@klsvdit.edu.in",
+      "phone": "9923893532",
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/08/download.jpg",
+      "profile": "https://www.linkedin.com/in/poornima-raikar-1696851b2/"
+    },
+    {
+      "name": "Prof. Bhagat Inamdar",
+      "designation": "Assistant Professor E-mail :bgi@klsvdit.edu.in",
+      "email": "bgi@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2024/12/DSC3914-scaled.jpg",
+      "profile": null
+    },
+    {
+      "name": "Prof. Sunita Kallu",
+      "designation": "Assistant Professor",
+      "email": "snk@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/06/DSC3766-2-797x1024.jpg",
+      "profile": "https://www.linkedin.com/in/girish%20shivanagudi"
+    },
+    {
+      "name": "Prof. Farzana N. Nadaf",
+      "designation": "Assistant Professor",
+      "email": "fnn@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/08/DSC3744-scaled.jpg",
+      "profile": null
+    },
+    {
+      "name": "Prof. Shree Gowri S S",
+      "designation": "Assistant Professor",
+      "email": "sss@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/06/DSC3741-scaled.jpg",
+      "profile": null
+    },
+    {
+      "name": "Prof. Pranesh Kulkarni",
+      "designation": "Assistant Professor E-mail :pkk@klsvdit.edu.in",
+      "email": "pkk@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2024/12/DSC3890-scaled.jpg",
+      "profile": null
+    },
+    {
+      "name": "Prof. Girish Shivanagudi",
+      "designation": "Assistant Professor E-mail :gns@klsvdit.edu.in",
+      "email": "gns@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/06/DSC3913-scaled.jpg",
+      "profile": null
+    },
+    {
+      "name": "Prof. Vijeth Swadi Assistant Professor E-mail:",
+      "designation": "Professor",
+      "email": "vbs@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-23-at-10.21.58-AM.jpeg",
+      "profile": null
+    },
+    {
+      "name": "Prof. Suman Yaligar Assistant Professor E-mail:",
+      "designation": "Professor",
+      "email": "say@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2025/08/IMG-20250806-WA0017.jpg",
+      "profile": null
+    },
+    {
+      "name": "Prof. Nirmala Ganiger Assistant Professor E",
+      "designation": "Professor",
+      "email": "ng@klsvdit.edu.in",
+      "phone": null,
+      "image": "https://klsvdit.edu.in/wp-content/uploads/2024/06/Nirmala-Ganiger.jpg",
+      "profile": null
+    }
+  ]
+}

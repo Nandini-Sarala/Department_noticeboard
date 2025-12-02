@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
+</head>
+<body>
+    <!-- ✅ Admin Login Modal -->
+<div id="admin-login-modal" class="modal hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <form id="admin-login-form" class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+    <h2 class="text-lg font-bold mb-4 text-center">Admin Login</h2>
+
+    <input 
+      type="text" 
+      id="admin-username" 
+      placeholder="Admin Username" 
+      required 
+      class="w-full mb-4 p-2 border rounded"
+    >
+
+    <input 
+      type="password" 
+      id="admin-password" 
+      placeholder="Password" 
+      required 
+      class="w-full mb-4 p-2 border rounded"
+    >
+
+    <button 
+      type="submit" 
+      class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+      Login as Admin
+    </button>
+
+    <!-- Close button -->
+    <button type="button" 
+      class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl" 
+      onclick="document.getElementById('admin-login-modal').classList.remove('active'); setBlurOnMainContent(false);">
+      &times;
+    </button>
+  </form>
+</div>
+<script>document.addEventListener('DOMContentLoaded', function () {
+    const adminLoginForm = document.getElementById('admin-login-form');
+
+    adminLoginForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const username = document.getElementById('admin-username').value;
+        const password = document.getElementById('admin-password').value;
+
+        console.log("➡ Sending Admin Login:", { username, password });
+
+        const res = await fetch('http://localhost:5000/admin-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        
+        if (data.admin) {
+            localStorage.setItem('admin', JSON.stringify(data.admin));
+            localStorage.setItem('isAdmin', "true");
+
+            showNotification("Admin login successful!", "success");
+            document.getElementById('admin-login-modal').classList.remove('active');
+            setBlurOnMainContent(false);
+        } else {
+            alert(data.error || "Admin login failed");
+        }
+    });
+});
+</script>
+</body>
+</html>

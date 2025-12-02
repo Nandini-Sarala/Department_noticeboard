@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Placement Highlights</title>
+    <link rel="stylesheet" href="css_page.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .slider {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
+            margin: 0 auto 2rem auto;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 24px #0003;
+            background: linear-gradient(135deg, #f3f4f6 60%, #e0e7ff 100%);
+        }
+        .slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(.4,2,.6,1);
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #fff;
+            box-shadow: 0 2px 12px #0001;
+            border-radius: 1.5rem;
+            position: relative;
+        }
+        .slide-caption {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(31, 41, 55, 0.7);
+            color: #fff;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            box-shadow: 0 2px 8px #0002;
+        }
+        .slider-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .slider-btn {
+            pointer-events: all;
+            background: rgba(255,255,255,0.8);
+            border: none;
+            border-radius: 9999px;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #6366f1;
+            box-shadow: 0 2px 8px #0002;
+            transition: background 0.2s;
+        }
+        .slider-btn:hover {
+            background: #6366f1;
+            color: #fff;
+        }
+        @media (min-width: 700px) {
+            .slider { max-width: 416px; height: 640px; }
+        }
+        @media (min-width: 1050px) {
+            .slider { max-width: 520px; height: 800px; }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col items-center">
+    <nav class="bg-gradient-to-r from-red-600 to-orange-600 text-white w-full top-0 z-50 shadow-lg mb-8">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center space-x-4">
+            <i class="fas fa-briefcase fa-2x text-white"></i>
+            <h1 class="text-2xl font-semibold tracking-wide">Placement Highlights</h1>
+        </div>
+    </nav>
+
+    <!-- Student Fliers Slider -->
+    <section class="slider relative">
+        <div class="slides" id="slides">
+            <div class="slide" style="background-image: url('fliers.jpg')">
+                
+            </div>
+            <div class="slide" style="background-image: url('fliers2.jpg')">
+               
+            </div>
+            <div class="slide" style="background-image: url('fliers3.jpg')">
+               
+            </div>
+        </div>
+        <!-- Slider Controls -->
+        <div class="slider-controls">
+            <button class="slider-btn" id="prevBtn" aria-label="Previous Slide">&lt;</button>
+            <button class="slider-btn" id="nextBtn" aria-label="Next Slide">&gt;</button>
+        </div>
+    </section>
+    <!-- <div class="w-full max-w-4xl flex justify-end mb-8">
+        <a href="placed_students.html"
+            class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+            View All Placed Students
+        </a>
+    </div> -->
+
+    <!-- Companies Visiting Section -->
+    <section class="w-full max-w-4xl mb-10">
+        <h2 class="text-xl font-bold mb-4 text-red-700">Companies Visiting Our Campus</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+                <img src="tcslogo.webp" alt="TCS" class="h-12 mb-2" />
+                <span class="font-semibold text-gray-700">TCS</span>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+                <img src="infosyslogo.webp" alt="Infosys" class="h-12 mb-2" />
+                <span class="font-semibold text-gray-700">Infosys</span>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+                <img src="wiprologo.webp" alt="Wipro" class="h-12 mb-2" />
+                <span class="font-semibold text-gray-700">Wipro</span>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+                <img src="capgeminilogo.webp" alt="Capgemini" class="h-12 mb-2" />
+                <span class="font-semibold text-gray-700">Capgemini</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Internships Section -->
+    <section class="w-full max-w-4xl mb-10">
+        <h2 class="text-xl font-bold mb-4 text-green-700">Internships (Now Hiring via Internshala)</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <a href="https://internshala.com/internships/web-development-internship/" target="_blank"
+    class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 hover:bg-green-50 transition">
+    <img src="internshala_logo.webp" alt="Internshala" class="h-10" />
+    <div>
+        <div class="font-semibold text-gray-800">Web Development Internships</div>
+        <div class="text-sm text-gray-500">Work on live web projects</div>
+    </div>
+</a>
+
+<a href="https://internshala.com/internships/android-app-development-internship/" target="_blank"
+    class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 hover:bg-green-50 transition">
+    <img src="internshala_logo.webp" alt="Internshala" class="h-10" />
+    <div>
+        <div class="font-semibold text-gray-800">Android Development Internships</div>
+        <div class="text-sm text-gray-500">Learn mobile app development</div>
+    </div>
+</a>
+
+<a href="https://internshala.com/internships/machine-learning-internship/" target="_blank"
+    class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 hover:bg-green-50 transition">
+    <img src="internshala_logo.webp" alt="Internshala" class="h-10" />
+    <div>
+        <div class="font-semibold text-gray-800">Machine Learning Internships</div>
+        <div class="text-sm text-gray-500">Work with AI/ML technologies</div>
+    </div>
+</a>
+
+<a href="https://internshala.com/internships/cyber-security-internship/" target="_blank"
+    class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 hover:bg-green-50 transition">
+    <img src="internshala_logo.webp" alt="Internshala" class="h-10" />
+    <div>
+        <div class="font-semibold text-gray-800">Cyber Security Internships</div>
+        <div class="text-sm text-gray-500">Work on real-world security projects</div>
+    </div>
+</a>
+
+<a href="https://internshala.com/internships/ui-ux-design-internship/" target="_blank"
+    class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 hover:bg-green-50 transition">
+    <img src="internshala_logo.webp" alt="Internshala" class="h-10" />
+    <div>
+        <div class="font-semibold text-gray-800">UI/UX Design Internships</div>
+        <div class="text-sm text-gray-500">Create innovative interfaces</div>
+    </div>
+</a>
+
+<a href="https://internshala.com/internships/cloud-computing-internship/" target="_blank"
+    class="bg-white rounded-lg shadow p-4 flex items-center space-x-4 hover:bg-green-50 transition">
+    <img src="internshala_logo.webp" alt="Internshala" class="h-10" />
+    <div>
+        <div class="font-semibold text-gray-800">Cloud Computing Internships</div>
+        <div class="text-sm text-gray-500">Learn AWS, Azure & GCP</div>
+    </div>
+</a>
+
+        </div>
+    </section>
+
+    <a href="t&p.html" class="mt-8 text-red-700 hover:underline">← Back </a>
+
+ <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const slidesContainer = document.getElementById("slides");
+            let currentIndex = 0;
+            let sliderInterval;
+
+            // --- Load placement images ---
+            async function loadPlacementImages() {
+                try {
+                    const res = await fetch("http://127.0.0.1:5000/api/notices/placement");
+                    const data = await res.json();
+                    slidesContainer.innerHTML = ""; // clear existing slides
+
+                    if (!data || data.length === 0) {
+                        slidesContainer.innerHTML =` <div class='slide flex items-center justify-center text-gray-500 text-lg'>No placement highlights yet</div>`;
+                        return;
+                    }
+
+                    // Create slides only for notices with image
+                    const images = data.filter(notice => notice.image_url);
+                    images.forEach(notice => {
+                        const div = document.createElement("div");
+                        div.className = "slide";
+                        div.style.backgroundImage = `url('http://127.0.0.1:5000${notice.image_url}')`;
+                        div.style.backgroundSize = "cover";
+                        div.style.backgroundPosition = "center";
+                        div.style.height = "800px";
+                        div.style.minWidth = "100%";
+                        div.style.transition = "transform 0.5s ease-in-out";
+                        slidesContainer.appendChild(div);
+                    });
+
+
+                    const totalSlides = slidesContainer.children.length;
+
+                    if (totalSlides === 0)
+                        return;
+
+                    // --- Show slide function ---
+                    function showSlide(index) {
+                        slidesContainer.style.display = "flex";
+                        slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+                    }
+
+                    // --- Next / Previous ---
+                    function nextSlide() {
+                        currentIndex = (currentIndex + 1) % totalSlides;
+                        showSlide(currentIndex);
+                    }
+
+                    function prevSlide() {
+                        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                        showSlide(currentIndex);
+                    }
+
+                    function resetInterval() {
+                        clearInterval(sliderInterval);
+                        sliderInterval = setInterval(nextSlide, 4000);
+                    }
+
+                    // --- Attach button controls ---
+                    const nextBtn = document.getElementById("nextBtn");
+                    const prevBtn = document.getElementById("prevBtn");
+                    if (nextBtn) nextBtn.onclick = () => { nextSlide(); resetInterval(); };
+                    if (prevBtn) prevBtn.onclick = () => { prevSlide(); resetInterval(); };
+
+                    // --- Initialize ---
+                    showSlide(0);
+                    sliderInterval = setInterval(nextSlide, 4000); // auto-slide every 4s
+                } catch (err) {
+                    console.error("Error loading placement images:", err);
+                    slidesContainer.innerHTML =` <div class='slide flex items-center justify-center text-gray-500 text-lg'>Failed to load placement highlights</div>`;
+                }
+            }
+
+            loadPlacementImages();
+
+            // --- Refresh slider after adding new placement notice ---
+            window.refreshPlacementSlider = loadPlacementImages;
+        });
+    </script>
+</body>
+</html>

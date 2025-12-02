@@ -1,0 +1,118 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Training & Placement Notices</title>
+    <link rel="stylesheet" href="css_page.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col items-center">
+    <nav class="bg-gradient-to-r from-red-600 to-orange-600 text-white w-full top-0 z-50 shadow-lg mb-8">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center space-x-4">
+            <i class="fas fa-briefcase fa-2x text-white"></i>
+            <h1 class="text-2xl font-semibold tracking-wide">Achievements</h1>
+        </div>
+    </nav>
+    <main class="w-full max-w-4xl mx-auto px-4">
+        <div class="flex items-center gap-4 mb-6">
+            <input id="searchInput" type="text" placeholder="Search placement notices..."
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500" />
+            <button id="searchBtn"
+                class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Search</button>
+        </div>
+        <ul id="achievementsList" class="space-y-4"></ul>
+    </main>
+    <a href="home.html" class="mt-8 text-red-700 hover:underline">← Back to Notice Board</a>
+    <script>
+
+        async function loadAchievements() {
+            try {
+                const res = await fetch("http://127.0.0.1:5000/api/notices/achievements");
+                const data = await res.json();
+                renderAchievements(data);
+            } catch (err) {
+                console.error("Error loading achievements:", err);
+                document.getElementById("achievementsList").innerHTML =
+                    "<p class='text-red-500 text-center'>Failed to load achievements</p>";
+            }
+        }
+        // Function to render achievements
+        function renderAchievements(data, filter = "") {
+            const list = document.getElementById("achievementsList");
+            list.innerHTML = "";
+
+            const filtered = data.filter(
+                (item) =>
+                    item.description?.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                list.innerHTML =
+                    "<p class='text-gray-500 text-center'>No achievements found</p>";
+                return;
+            }
+
+            filtered.forEach((ach) => {
+                const li = document.createElement("li");
+                li.className = "bg-white rounded-xl shadow-lg p-4 flex flex-col items-center text-center";
+
+                // Image (if present)
+                if (ach.image_url) {
+                    const img = document.createElement("img");
+                    img.src = `http://127.0.0.1:5000${ach.image_url}`;
+                    img.alt = "Achievement Image";
+                    img.className = "w-full h-64 object-contain rounded-lg mb-4";
+                    li.appendChild(img);
+                }
+
+                // Description only (no title, expiry, etc.)
+                const desc = document.createElement("p");
+                desc.textContent = ach.description || "No description available";
+                desc.className = "text-gray-700 text-base";
+                li.appendChild(desc);
+
+                list.appendChild(li);
+            });
+        }
+
+    
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initial load
+            loadAchievements();
+
+            // Search functionality
+            const searchInput = document.getElementById("searchInput");
+            const searchBtn = document.getElementById("searchBtn");
+
+            searchBtn.addEventListener("click", () => {
+                const filter = searchInput.value.trim();
+                fetch("http://127.0.0.1:5000/api/notices/achievements")
+                    .then((res) => res.json())
+                    .then((data) => renderAchievements(data, filter))
+                    .catch((err) => console.error(err));
+            });
+
+           
+            searchInput.addEventListener("input", async (e) => {
+                const filter = e.target.value.trim();
+                try {
+                    const res = await fetch("http://127.0.0.1:5000/api/notices/achievements");
+                    const data = await res.json();
+                    renderAchievements(data, filter);
+                } catch (err) {
+                    console.error("Error filtering achievements:", err);
+                }
+            });
+
+        });
+
+
+    </script>
+</body>
+
+</html>

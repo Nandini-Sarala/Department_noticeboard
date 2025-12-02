@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Exam Schedule Notices</title>
+    <link rel="stylesheet" href="css_page.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 min-h-screen flex flex-col items-center">
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-green-700 to-blue-700 text-white w-full top-0 z-50 shadow-xl mb-8">
+        <div class="max-w-5xl mx-auto px-6 py-5 flex items-center space-x-4">
+            <i class="fas fa-file-alt fa-2x text-white"></i>
+            <h1 class="text-2xl font-bold tracking-wide">Exam Schedule Notices</h1>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- 2nd Year -->
+        <div
+            class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 p-6 border border-gray-100">
+            <h2 class="text-2xl font-bold text-green-700 mb-5 text-center">2nd Year</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <button data-sem="sem3" class="semester-box bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-4 
+                 text-gray-900 text-center font-medium cursor-pointer 
+                 hover:from-green-200 hover:to-green-300 hover:scale-105 
+                 transition shadow">
+                    3rd Semester
+                </button>
+                <!-- 4th Semester -->
+                <button data-sem="sem4" class="semester-box bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-4 
+                 text-gray-900 text-center font-medium cursor-pointer 
+                 hover:from-green-200 hover:to-green-300 hover:scale-105 
+                 transition shadow">
+                    4th Semester
+                </button>
+
+            </div>
+        </div>
+
+        <!-- 3rd Year -->
+        <div
+            class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 p-6 border border-gray-100">
+            <h2 class="text-2xl font-bold text-blue-700 mb-5 text-center">3rd Year</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <button data-sem="sem5" class="semester-box bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-4 
+                 text-gray-900 text-center font-medium cursor-pointer 
+                 hover:from-green-200 hover:to-green-300 hover:scale-105 
+                 transition shadow">
+                    5th Semester
+                </button>
+                <button data-sem="sem6" class="semester-box bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-4 
+                 text-gray-900 text-center font-medium cursor-pointer 
+                 hover:from-green-200 hover:to-green-300 hover:scale-105 
+                 transition shadow">
+                    6th Semester
+                </button>
+            </div>
+        </div>
+
+        <!-- 4th Year -->
+        <div
+            class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 p-6 border border-gray-100">
+            <h2 class="text-2xl font-bold text-purple-700 mb-5 text-center">4th Year</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <button data-sem="sem7" class="semester-box bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-4 
+                 text-gray-900 text-center font-medium cursor-pointer 
+                 hover:from-green-200 hover:to-green-300 hover:scale-105 
+                 transition shadow">
+                    7th Semester
+                </button>
+                <button data-sem="sem8" class="semester-box bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-4 
+                 text-gray-900 text-center font-medium cursor-pointer 
+                 hover:from-green-200 hover:to-green-300 hover:scale-105 
+                 transition shadow">
+                    8th Semester
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Back Button -->
+    <a href="home.html" class="mt-10 mb-6 text-green-700 font-medium hover:underline">← Back to Notice Board</a>
+
+    <!-- Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-lg max-w-3xl w-full p-6 relative">
+            <!-- <button id="closeModal"
+                class="absolute top-3 right-3 text-gray-600 hover:text-red-600 text-xl font-bold">×</button> -->
+            <h3 id="modalTitle" class="text-2xl font-semibold mb-4 text-center">Semester Timetable</h3>
+
+            <!-- Buttons to choose IA or Semester -->
+            <div id="chooseButtons" class="flex justify-center gap-6 mb-6">
+                <button id="showIA" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">
+                    IA Timetable
+                </button>
+                <button id="showSem" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+                    Semester Timetable
+                </button>
+            </div>
+
+            <!-- Iframe to display timetable
+            <iframe id="timetableFrame" src="" class="w-full h-96 border rounded-lg hidden"></iframe> -->
+
+            <button id="closeModal"
+                class="mt-6 w-full bg-gradient-to-r from-red-500 to-pink-500 text-white py-2 rounded-lg shadow hover:from-red-600 hover:to-pink-600">
+                Close
+            </button>
+        </div>
+    </div>
+    </div>
+
+
+    <script>
+
+
+
+
+        const modal = document.getElementById("modal");
+        const modalTitle = document.getElementById("modalTitle");
+        // const chooseButtons = document.getElementById("chooseButtons");
+        const showIA = document.getElementById("showIA");
+        const showSem = document.getElementById("showSem");
+        // const timetableFrame = document.getElementById("timetableFrame");
+        // const iaFrame = document.getElementById("iaFrame");
+        // const semFrame = document.getElementById("semFrame");
+        const closeModal = document.getElementById("closeModal");
+
+        let currentSemIA = null;
+        let currentSemSem = null;
+        let currentSemesterKey = "";
+
+
+
+        // async function loadExamNoticesForSemester(semKey) {
+        //     //semKey like "sem3"
+        //     const possibleCats = [`exam_${semKey}`, `exam_iasem${semKey.replace("sem", "")}`, `exam_semsem${semKey.replace("sem", "")}`];
+        //     let notices = [];
+
+        //     for (const cat of possibleCats) {
+        //         try {
+        //             const res = await fetch(`http://127.0.0.1:5000/api/notices/${cat}`);
+        //             const data = await res.json();
+        //             if (Array.isArray(data) && data.length) {
+        //                 notices = data;
+        //                 break;
+        //             }
+        //         } catch (err) {
+        //             console.error("Error fetching", cat, err);
+        //         }
+        //     }
+
+        //     return notices;
+        // }
+        async function loadExamNoticesForSemester(semKey) {
+            const possibleCats = [
+                `exam_${semKey}`,
+                `exam_iasem${semKey.replace("sem", "")}`,
+                `exam_semsem${semKey.replace("sem", "")}`
+            ];
+            let notices = [];
+
+            for (const cat of possibleCats) {
+                try {
+                    const res = await fetch(`http://127.0.0.1:5000/api/notices/${cat}`);
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length) {
+                        notices = notices.concat(data); // collect all
+                    }
+                } catch (err) {
+                    console.error("Error fetching", cat, err);
+                }
+            }
+
+            return notices;
+        }
+
+
+
+
+        document.querySelectorAll(".semester-box").forEach(box => {
+            box.addEventListener("click", async () => {
+                const semKey = box.getAttribute("data-sem"); // sem3
+                currentSemesterKey = semKey;
+
+                // Always open modal first (even if no data)
+                modalTitle.textContent = `${semKey.toUpperCase()} Timetable`;
+                modal.classList.remove("hidden");
+
+                const notices = await loadExamNoticesForSemester(semKey);
+                console.log("Fetched notices for", semKey, notices);
+
+                if (!notices.length) {
+                    currentSemIA = null;
+                    currentSemSem = null;
+
+                    alert("No timetable uploaded yet for this semester.");
+                    return;
+                }
+                // // Separate IA and SEM timetables based on description/title
+                // currentSemIA = notices.find(n =>
+                //     /(ia|internal|internal assessment)/i.test(n.title + " " + n.description)
+                // );
+                // currentSemSem = notices.find(n =>
+                //     /(semester|end exam|final)/i.test(n.title + " " + n.description)
+                // );
+                // Separate IA and SEM timetables based on description/title or category
+                currentSemIA = notices.find(n =>
+                    /exam_ia/.test(n.category || "") ||
+                    /(ia|internal|internal assessment)/i.test(n.title + " " + n.description)
+                );
+
+                currentSemSem = notices.find(n =>
+                    /exam_sem/.test(n.category || "") ||
+                    /(semester|end exam|final)/i.test(n.title + " " + n.description)
+                );
+
+
+
+            });
+        });
+
+
+
+        // IA click
+        showIA.addEventListener("click", () => {
+            if (currentSemIA && currentSemIA.image_url) {
+                // open file
+                window.open(`http://127.0.0.1:5000${currentSemIA.image_url}`, "_blank");
+            } else {
+                alert("IA timetable not uploaded.");
+            }
+        });
+
+        // Sem click (similar)
+        showSem.addEventListener("click", () => {
+            if (currentSemSem && currentSemSem.image_url) {
+                window.open(`http://127.0.0.1:5000${currentSemSem.image_url}`, "_blank");
+            } else {
+                alert("Semester timetable not uploaded.");
+            }
+        });
+
+
+
+
+
+        closeModal.addEventListener("click", () => modal.classList.add("hidden"));
+        modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
+        // -------------------- AUTO-OPEN EXAM FROM QUERY PARAMS --------------------
+        document.addEventListener("DOMContentLoaded", async () => {
+            const params = new URLSearchParams(window.location.search);
+            const semKey = params.get("sem");
+            const type = params.get("type"); // "ia" or "sem"
+
+            if (!semKey) return; // nothing to auto-open
+
+            // Load that semester’s notices
+            const notices = await loadExamNoticesForSemester(semKey);
+            if (!notices.length) return;
+
+            // Separate IA / SEM data
+            currentSemIA = notices.find(n =>
+                /(ia|internal|internal assessment)/i.test(n.title + " " + n.description)
+            );
+            currentSemSem = notices.find(n =>
+                /(semester|end exam|final)/i.test(n.title + " " + n.description)
+            );
+
+            // Open modal automatically
+            modalTitle.textContent = `${semKey.toUpperCase()} Timetable`;
+            modal.classList.remove("hidden");
+
+            if (type === "ia" && currentSemIA && currentSemIA.image_url) {
+                window.open(`http://127.0.0.1:5000${currentSemIA.image_url}`, "_blank");
+            } else if (type === "sem" && currentSemSem && currentSemSem.image_url) {
+                window.open(`http://127.0.0.1:5000${currentSemSem.image_url}`, "_blank");
+            } else {
+                alert(`No ${type.toUpperCase()} timetable uploaded for ${semKey}.`);
+            }
+        });
+
+
+
+    </script>
+</body>
+
+</html>

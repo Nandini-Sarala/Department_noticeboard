@@ -1,0 +1,957 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <title>Interactive Academic Calendar — Multi Sem</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+
+        /* slight tweak so empty grid cells keep height & look consistent */
+
+        .day-cell {
+
+            min-height: 64px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: flex-start;
+
+        }
+
+
+        .empty-cell {
+
+            visibility: hidden;
+
+        }
+
+
+        /* hides placeholder number but keeps box */
+
+    </style>
+
+</head>
+
+
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-6">
+
+
+    <!-- Header -->
+
+    <nav class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white w-full shadow-lg mb-6">
+
+        <div class="text-center my-6">
+
+            <h1 class="text-3xl font-bold">Academic Calendar</h1>
+
+            <h2 class="text-md text-white-400 mt-1">Semester-wise Events & Workshops 2025-26</h2>
+
+            <h3 class="text-md text-white-400 mt-1">Department of Computer Science and Engineering , KLS VDIT , Haliyal</h3>
+
+        </div>
+
+
+    </nav>
+
+
+    <!-- Semester Buttons -->
+
+    <div class="flex gap-3 mb-6">
+
+        <button class="sem-btn px-4 py-2 rounded shadow sem-active" data-sem="3">3rd Sem</button>
+
+        <button class="sem-btn px-4 py-2 rounded shadow" data-sem="5">5th Sem</button>
+
+        <button class="sem-btn px-4 py-2 rounded shadow" data-sem="7">7th Sem</button>
+
+    </div>
+
+
+    <!-- Calendar Container -->
+
+    <main class="w-full max-w-5xl mx-auto px-4">
+
+        <div class="flex justify-between items-center mb-4">
+
+            <h2 id="monthYear" class="text-xl font-bold text-gray-800"></h2>
+
+            <div class="space-x-2">
+
+                <button id="prevBtn" class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700">←</button>
+
+                <button id="todayBtn" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Today</button>
+
+                <button id="nextBtn" class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700">→</button>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-7 gap-2 text-center font-semibold text-gray-700 mb-2">
+
+            <div>Sun</div>
+
+            <div>Mon</div>
+
+            <div>Tue</div>
+
+            <div>Wed</div>
+
+            <div>Thu</div>
+
+            <div>Fri</div>
+
+            <div>Sat</div>
+
+        </div>
+
+
+        <div id="calendarDays" class="grid grid-cols-7 gap-2"></div>
+
+    </main>
+
+
+    <!-- Modal -->
+
+    <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-40">
+
+        <div id="modalBox" class="bg-white p-6 rounded-lg shadow-lg w-80 text-center relative">
+
+            <button id="closeModal" class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+            <h3 id="eventTitle" class="text-xl font-bold text-purple-700 mb-3"></h3>
+
+            <p id="eventDesc" class="text-gray-700 mb-4"></p>
+
+            <div class="mt-2">
+
+                <button id="modalOk" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">OK</button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <a href="home.html" class="mt-8 bg-purple-600 text-white hover:underline">← Back to Notice Board</a>
+
+
+    <script>
+
+        /*******************************
+
+         * Embedded events (no fetch)
+
+         * Keys: semester number -> { "YYYY-MM-DD": {title, desc} }
+
+         *******************************/
+
+        const events = {
+
+            "3": {
+
+
+                "2025-01-01": { "title": "New Year’s Day", "desc": "First day of the year (Gregorian calendar)." },
+
+                "2025-01-06": { "title": "Guru Gobind Singh Jayanti", "desc": "Birth anniversary of Guru Gobind Singh Ji." },
+
+                "2025-01-13": { "title": "Lohri", "desc": "Harvest festival celebrated in North India." },
+
+                "2025-01-14": { "title": "Makar Sankranti / Pongal", "desc": "Sun enters Capricorn; harvest festival." },
+
+                "2025-01-23": { "title": "Subhas Chandra Bose Jayanti", "desc": "Birth anniversary of Netaji Subhas Chandra Bose." },
+
+                "2025-01-26": { "title": "Republic Day", "desc": "National holiday: adoption of Indian Constitution." },
+
+                "2025-01-30": { "title": "Gandhi Punyatithi", "desc": "Death anniversary of Mahatma Gandhi." },
+
+                "2025-02-11": { "title": "Vasant Panchami", "desc": "Festival of Saraswati and onset of spring." },
+
+                "2025-02-26": { "title": "Maha Shivaratri", "desc": "Great night of Lord Shiva." },
+
+                "2025-03-13": { "title": "Holika Dahan", "desc": "Eve of Holi (bonfire night)." },
+
+                "2025-03-14": { "title": "Holi", "desc": "Festival of colors." },
+
+                "2025-03-30": { "title": "Eid al-Fitr", "desc": "Islamic festival marking end of Ramadan." },
+
+                "2025-04-06": { "title": "Ram Navami", "desc": "Birth of Lord Rama." },
+
+                "2025-04-10": { "title": "Mahavir Jayanti", "desc": "Birth of Lord Mahavir (Jain)." },
+
+                "2025-04-18": { "title": "Good Friday", "desc": "Christian observance of crucifixion of Jesus." },
+
+                "2025-05-01": { "title": "May Day / Labour Day", "desc": "International Workers’ Day." },
+
+                "2025-05-12": { "title": "Buddha Purnima", "desc": "Birth of Gautama Buddha." },
+
+                "2025-05-25": { "title": "Ramzan Eid (alternate observance)", "desc": "Another day for Eid al-Fitr in some places." },
+
+                "2025-06-07": { "title": "Bakrid / Eid al-Adha", "desc": "Festival of Sacrifice (Islamic)." },
+
+                "2025-07-06": { "title": "Muharram / Ashura", "desc": "Islamic New Year / day of remembrance." },
+
+                "2025-07-10": { "title": "Guru Purnima", "desc": "Honouring spiritual teachers." },
+
+                "2025-07-29": { "title": "Nag Panchami", "desc": "Worship of serpents." },
+
+                "2025-08-08": { "title": "Varalakshmi Vratam", "desc": "Vow to Goddess Lakshmi for welfare." },
+
+                "2025-08-09": { "title": "Raksha Bandhan", "desc": "Celebration of sibling bonds." },
+
+                "2025-08-15": { "title": "Independence Day", "desc": "National holiday: India’s independence." },
+
+                "2025-08-16": { "title": "Janmashtami", "desc": "Birth of Lord Krishna." },
+
+                "2025-08-27": { "title": "Ganesh Chaturthi", "desc": "Festival of Lord Ganesha." },
+
+                "2025-08-04": { "title": "Commencement of 5th & 7th Semester", "desc": "Start of odd semester (commencement)." },
+
+                "2025-08-14": { "title": "Workshop on Django", "desc": "Workshop (Django) — date seen on calendar." },
+
+                "2025-08-22": { "title": "Workshop on IoT", "desc": "Workshop on IoT (calendar entry)." },
+
+                "2025-08-23": { "title": "Workshop on Github", "desc": "Workshop on GitHub (calendar entry)." },
+
+                "2025-08-27": { "title": "Varasiddhi Vinayaka Vrata / Academic Reviews", "desc": "Varasiddhi Vinayaka Vrata || Review of Non-Credit Mandatory Courses || AICTE Activity Point || Mini Project || Major Project Phase -III || Counselling || ERP Status." },
+
+                "2025-08-30": { "title": "Continuation: Project / Counselling / ERP Status", "desc": "Continuation of the project / review / counselling items." },
+
+
+                "2025-09-05": { "title": "Eid-Milad / Teachers' Day", "desc": "Eid-Milad and Teachers' Day celebration." },
+
+                "2025-09-15": { "title": "Commencement of Classes / Engineer's Day / Blood Donation Camp", "desc": "Classes begin for 3rd semester; also celebration of Engineer's Day and blood donation camp." },
+
+                "2025-09-30": { "title": "Review of Non-Credit Mandatory Courses / Counselling / ERP Status", "desc": "Academic review and student counselling sessions." },
+
+
+                "2025-10-01": { "title": "Mahanavami / Ayudhapooja / Vijayadashami", "desc": "Festival days; start of October events." },
+
+                "2025-10-02": { "title": "Gandhi Jayanti", "desc": "National holiday: birth anniversary of Mahatma Gandhi." },
+
+                "2025-10-07": { "title": "Maharshi Valmiki Jayanti", "desc": "Celebration of Maharshi Valmiki Jayanti." },
+
+
+                "2025-10-20": { "title": "Naraka Chaturdashi", "desc": "Festival of lights begins (Deepavali period)." },
+
+                "2025-10-22": { "title": "Balipadyami / Deepavali", "desc": "Main day of Deepavali celebration." },
+
+
+                "2025-10-30": { "title": "Alumni Meet / Review / Counselling / ERP Status", "desc": "Alumni meet and review of non-credit mandatory courses; counselling and ERP updates." },
+
+                "2025-10-31": { "title": "Alumni Meet (cont.)", "desc": "Continuation of Alumni and review activities." },
+
+
+                "2025-11-01": { "title": "Kannada Rajyothsava", "desc": "State formation day of Karnataka." },
+
+                "2025-11-05": { "title": "IA-1 Begins", "desc": "First Internal Assessment (IA-1) begins around 5–6 November." },
+
+                "2025-11-06": { "title": "IA-1 (cont.)", "desc": "IA-1 continuation." },
+
+                "2025-11-08": { "title": "Kanakadasa Jayanthi", "desc": "Celebration of Kanakadasa Jayanthi." },
+
+
+                "2025-11-14": { "title": "Reporting IA-1 Marks to Parents / Parents Meet", "desc": "Reporting of IA-1 results and parent meeting." },
+
+                "2025-11-30": { "title": "Review of Non-Credit Mandatory Courses / Counselling / ERP Status", "desc": "Regular review and counselling sessions." },
+
+
+                "2025-12-25": { "title": "Christmas", "desc": "Festival celebrating the birth of Jesus Christ." },
+
+
+                "2025-12-29": { "title": "IA-2 Begins", "desc": "Second Internal Assessment (IA-2) begins (29–31 Dec)." },
+
+                "2025-12-31": { "title": "IA-2 (cont.) / Counselling / ERP Status", "desc": "IA-2 continuation along with counselling and ERP updates." },
+
+
+                "2026-01-10": { "title": "Last Working Day / Reporting Final IA Marks to Parents", "desc": "Last working day of semester; reporting of final IA marks to parents (10 Jan)." },
+
+                "2026-01-12": { "title": "Practical / Viva-Voce Examinations Begin", "desc": "Start of practical and viva-voce exams (12–21 Jan)." },
+
+                "2026-01-23": { "title": "Theory Examinations Begin", "desc": "Commencement of theory exams (23 Jan – 18 Feb)." },
+
+                "2026-02-23": { "title": "Commencement of Even Semester (AY 2025–26)", "desc": "Even semester begins after exams." }
+
+
+
+
+            },
+
+
+            "5": {
+
+                "2025-01-01": { "title": "New Year’s Day", "desc": "First day of the year (Gregorian calendar)." },
+
+                "2025-01-06": { "title": "Guru Gobind Singh Jayanti", "desc": "Birth anniversary of Guru Gobind Singh Ji." },
+
+                "2025-01-13": { "title": "Lohri", "desc": "Harvest festival celebrated in North India." },
+
+                "2025-01-14": { "title": "Makar Sankranti / Pongal", "desc": "Sun enters Capricorn; harvest festival." },
+
+                "2025-01-23": { "title": "Subhas Chandra Bose Jayanti", "desc": "Birth anniversary of Netaji Subhas Chandra Bose." },
+
+                "2025-01-26": { "title": "Republic Day", "desc": "National holiday: adoption of Indian Constitution." },
+
+                "2025-01-30": { "title": "Gandhi Punyatithi", "desc": "Death anniversary of Mahatma Gandhi." },
+
+                "2025-02-11": { "title": "Vasant Panchami", "desc": "Festival of Saraswati and onset of spring." },
+
+                "2025-02-26": { "title": "Maha Shivaratri", "desc": "Great night of Lord Shiva." },
+
+                "2025-03-13": { "title": "Holika Dahan", "desc": "Eve of Holi (bonfire night)." },
+
+                "2025-03-14": { "title": "Holi", "desc": "Festival of colors." },
+
+                "2025-03-30": { "title": "Eid al-Fitr", "desc": "Islamic festival marking end of Ramadan." },
+
+                "2025-04-06": { "title": "Ram Navami", "desc": "Birth of Lord Rama." },
+
+                "2025-04-10": { "title": "Mahavir Jayanti", "desc": "Birth of Lord Mahavir (Jain)." },
+
+                "2025-04-18": { "title": "Good Friday", "desc": "Christian observance of crucifixion of Jesus." },
+
+                "2025-05-01": { "title": "May Day / Labour Day", "desc": "International Workers’ Day." },
+
+                "2025-05-12": { "title": "Buddha Purnima", "desc": "Birth of Gautama Buddha." },
+
+                "2025-05-25": { "title": "Ramzan Eid (alternate observance)", "desc": "Another day for Eid al-Fitr in some places." },
+
+                "2025-06-07": { "title": "Bakrid / Eid al-Adha", "desc": "Festival of Sacrifice (Islamic)." },
+
+                "2025-07-06": { "title": "Muharram / Ashura", "desc": "Islamic New Year / day of remembrance." },
+
+                "2025-07-10": { "title": "Guru Purnima", "desc": "Honouring spiritual teachers." },
+
+                "2025-07-29": { "title": "Nag Panchami", "desc": "Worship of serpents." },
+
+                "2025-08-08": { "title": "Varalakshmi Vratam", "desc": "Vow to Goddess Lakshmi for welfare." },
+
+                "2025-08-09": { "title": "Raksha Bandhan", "desc": "Celebration of sibling bonds." },
+
+                "2025-08-15": { "title": "Independence Day", "desc": "National holiday: India’s independence." },
+
+                "2025-08-16": { "title": "Janmashtami", "desc": "Birth of Lord Krishna." },
+
+                "2025-08-27": { "title": "Ganesh Chaturthi", "desc": "Festival of Lord Ganesha." },
+
+                "2025-09-04": { "title": "Onam", "desc": "Kerala harvest festival." },
+
+                "2025-09-17": { "title": "Vishwakarma Puja", "desc": "Worship of Lord Vishwakarma." },
+
+                "2025-09-21": { "title": "Mahalaya Amavasya", "desc": "Beginning of Durga Puja festive period." },
+
+                "2025-09-22": { "title": "Navaratri Begins", "desc": "Nine nights worship of Goddess Durga." },
+
+                "2025-09-28": { "title": "Durga Puja (Start)", "desc": "Worship of Goddess Durga." },
+
+                "2025-10-01": { "title": "Maha Navami", "desc": "Ninth day of Durga festival." },
+
+                "2025-10-02": { "title": "Dussehra / Gandhi Jayanti", "desc": "Victory of good over evil + birth anniversary of Mahatma Gandhi." },
+
+                "2025-10-06": { "title": "Sharad Purnima", "desc": "Full moon festival." },
+
+                "2025-10-09": { "title": "Karwa Chauth", "desc": "Fasting by married women for husband's life." },
+
+                "2025-10-18": { "title": "Dhanteras", "desc": "First day of Diwali festival." },
+
+                "2025-10-20": { "title": "Diwali / Lakshmi Puja", "desc": "Festival of lights; worship of Goddess Lakshmi." },
+
+                "2025-10-21": { "title": "Bhai Dooj", "desc": "Festival of brother-sister bond." },
+
+                "2025-10-23": { "title": "Govardhan Puja / Annakut", "desc": "Offering to Lord Krishna." },
+
+                "2025-10-27": { "title": "Chhath Puja", "desc": "Sun worship festival (in some states)." },
+
+                "2025-11-05": { "title": "Guru Nanak Jayanti", "desc": "Birth anniversary of Guru Nanak Dev Ji." },
+
+                "2025-11-14": { "title": "Children’s Day", "desc": "Birth anniversary of Jawaharlal Nehru." },
+
+                "2025-11-25": { "title": "Gurpurab", "desc": "Alternate name for Sikh festival / Guru Nanak (depending on region)." },
+
+                "2025-12-01": { "title": "World AIDS Day", "desc": "Global awareness day." },
+
+                "2025-12-16": { "title": "Dhanu Sankranti", "desc": "Solar transition festival." },
+
+                "2025-12-25": { "title": "Christmas Day", "desc": "Christian holiday celebration of birth of Jesus." },
+
+                "2025-12-31": { "title": "New Year’s Eve", "desc": "Last day of the year." },
+
+
+                // --- Added academic activities for 5th semester (from the uploaded calendar image) ---
+
+                "2025-07-31": { "title": "TSD verification", "desc": "TSD verification (31/07/2025) - as shown on the calendar image." },
+
+                "2025-08-04": { "title": "Commencement of 5th & 7th Semester", "desc": "Start of odd semester (commencement)." },
+
+                "2025-08-14": { "title": "Workshop on Django", "desc": "Workshop (Django) — date seen on calendar." },
+
+                "2025-08-15": { "title": "Independence Day", "desc": "National holiday (already present)." },
+
+                "2025-08-22": { "title": "Workshop on IoT", "desc": "Workshop on IoT (calendar entry)." },
+
+                "2025-08-23": { "title": "Workshop on Github", "desc": "Workshop on GitHub (calendar entry)." },
+
+                "2025-08-27": { "title": "Varasiddhi Vinayaka Vrata / Academic Reviews", "desc": "Varasiddhi Vinayaka Vrata || Review of Non-Credit Mandatory Courses || AICTE Activity Point || Mini Project || Major Project Phase -III || Counselling || ERP Status (calendar groups these items around 27/30 Aug)." },
+
+                "2025-08-30": { "title": "Continuation: Project / Counselling / ERP Status", "desc": "Continuation of the project / review / counselling items (calendar shows 27,30 together)." },
+
+
+                "2025-09-05": { "title": "Eid-Milad || Teachers' Day", "desc": "Eid-Milad and Teachers' Day (calendar shows both on same row)." },
+
+                "2025-09-10": { "title": "Project Phase-I", "desc": "Project Phase-I (calendar shows project-phase events 10-13 Sep)." },
+
+                "2025-09-11": { "title": "Talk on IPR", "desc": "Talk on IPR (placed with project-phase timeframe)." },
+
+                "2025-09-12": { "title": "Parents Meet", "desc": "Parents meet (calendar shows 12/13 in that week)." },
+
+                "2025-09-13": { "title": "Project Phase-I (cont.)", "desc": "Continuation of project activities." },
+
+                "2025-09-15": { "title": "Engineer's Day / Blood Donation Camp / Workshop on cubes", "desc": "Multiple events grouped on/around 15 Sep." },
+
+
+                "2025-09-22": { "title": "IA-1 for 5th & 7th Semester / Alumni talk", "desc": "IA-1 and alumni talk (calendar shows IA-1 on 22-24 & 27 Sept)." },
+
+                "2025-09-23": { "title": "IA-1 (cont.)", "desc": "IA-1 continued." },
+
+                "2025-09-24": { "title": "IA-1 (cont.)", "desc": "IA-1 continued." },
+
+                "2025-09-27": { "title": "Alumni / IA review (cont.)", "desc": "Additional IA/Alumni day listed." },
+
+
+                "2025-09-30": { "title": "Reporting IA marks to Parents / Reviews", "desc": "Reporting IA marks to parents || Review of Non-Credit Mandatory Courses || AICTE Activity Point || Mini Project || Major Project Phase-II || Counselling || ERP Status (calendar shows these reporting/review items around end of Sept)." },
+
+
+                "2025-10-01": { "title": "Mahanavami / Ayudhapooja / Vijayadashami", "desc": "Mahanavami/Ayudhapooja/Vijayadashami (calendar row), also Gandhi Jayanti nearby." },
+
+                "2025-10-02": { "title": "Gandhi Jayanti / Dussehra", "desc": "Gandhi Jayanti + Dussehra (already present as festival)." },
+
+                "2025-10-07": { "title": "Maharshi Valmiki Jayanthi", "desc": "Celebration / industry-visit timeframe shown as 7/11 Oct." },
+
+                "2025-10-11": { "title": "Industry visit (Maharshi Valmiki jayanthi week)", "desc": "Industry visit noted around 11 Oct." },
+
+                "2025-10-17": { "title": "Workshop on Web Development", "desc": "Workshop on Web Development (calendar entry around mid-Oct)." },
+
+
+                "2025-10-20": { "title": "Naraka Chaturdashi / Balipadyami / Deepavali", "desc": "Festival days (calendar shows Naraka/Deepavali around 20/22/25 Oct) and Technical Talk on RPA." },
+
+                "2025-10-22": { "title": "Technical Talk on RPA (cont.)", "desc": "Technical talk / festival window." },
+
+                "2025-10-25": { "title": "Deepavali (cont.) / Technical", "desc": "Deepavali / related technical events (calendar shows 20,22,25 for related items)." },
+
+
+                "2025-10-30": { "title": "Alumni Meet / Review / Projects", "desc": "Alumni meet || Review of Non Credit Mandatory Courses || AICTE Activity Point || Mini Project || Major Project Phase-II || Counselling || ERP Status (calendar has this at 30-31 Oct)." },
+
+                "2025-10-31": { "title": "Alumni Meet (cont.)", "desc": "Continuation of Alumni/Review activities." },
+
+
+                "2025-11-01": { "title": "Kannada Rajyothsava", "desc": "Kannada Rajyothsava (calendar shows 1 Nov)." },
+
+                "2025-11-03": { "title": "Project Phase-II / Kanakadasa Jayanthi", "desc": "Project Phase-II and Kanakadasa Jayanthi (calendar shows 3-4 & 7-8 Nov groupings)." },
+
+                "2025-11-07": { "title": "Workshop on ReactJS", "desc": "Workshop on ReactJS (calendar lists 7/8 under workshops)." },
+
+                "2025-11-14": { "title": "How to write paper (talk)", "desc": "Research writing / paper talk roughly mid-November." },
+
+
+                "2025-11-24": { "title": "IA-2 for 5th & 7th Semester / Reviews", "desc": "IA-2 and review of non-credit mandatory courses (calendar shows IA-2 on 24-26 & 30 Nov)." },
+
+                "2025-11-25": { "title": "IA-2 (cont.)", "desc": "IA-2 continuation." },
+
+                "2025-11-26": { "title": "IA-2 (cont.)", "desc": "IA-2 continuation." },
+
+                "2025-11-30": { "title": "IA-2 (close / cont.)", "desc": "IA-2 / review continuation (calendar includes 30 Nov in that cluster)." },
+
+
+                "2025-12-01": { "title": "Reporting Final IA Marks to Parents / Last working day of 5th & 7th Semester", "desc": "Reporting final IA marks to parents and last working day (calendar shows reporting final IA marks and last working day near 1-4 Dec)." },
+
+                "2025-12-04": { "title": "Last working day (cont.)", "desc": "Last working day of 5th & 7th Semester (calendar shows 1-4 Dec cluster)." },
+
+
+                "2025-12-10": { "title": "TED verification begins", "desc": "TED verification window shown in image (10/12/25 - 19/12/25)." },
+
+                "2025-12-19": { "title": "TED verification ends", "desc": "End of TED verification period." }
+
+            },
+
+
+
+
+
+
+            "7": {
+
+                "2025-01-01": { "title": "New Year’s Day", "desc": "First day of the year (Gregorian calendar)." },
+
+                "2025-01-06": { "title": "Guru Gobind Singh Jayanti", "desc": "Birth anniversary of Guru Gobind Singh Ji." },
+
+                "2025-01-13": { "title": "Lohri", "desc": "Harvest festival celebrated in North India." },
+
+                "2025-01-14": { "title": "Makar Sankranti / Pongal", "desc": "Sun enters Capricorn; harvest festival." },
+
+                "2025-01-23": { "title": "Subhas Chandra Bose Jayanti", "desc": "Birth anniversary of Netaji Subhas Chandra Bose." },
+
+                "2025-01-26": { "title": "Republic Day", "desc": "National holiday: adoption of Indian Constitution." },
+
+                "2025-01-30": { "title": "Gandhi Punyatithi", "desc": "Death anniversary of Mahatma Gandhi." },
+
+                "2025-02-11": { "title": "Vasant Panchami", "desc": "Festival of Saraswati and onset of spring." },
+
+                "2025-02-26": { "title": "Maha Shivaratri", "desc": "Great night of Lord Shiva." },
+
+                "2025-03-13": { "title": "Holika Dahan", "desc": "Eve of Holi (bonfire night)." },
+
+                "2025-03-14": { "title": "Holi", "desc": "Festival of colors." },
+
+                "2025-03-30": { "title": "Eid al-Fitr", "desc": "Islamic festival marking end of Ramadan." },
+
+                "2025-04-06": { "title": "Ram Navami", "desc": "Birth of Lord Rama." },
+
+                "2025-04-10": { "title": "Mahavir Jayanti", "desc": "Birth of Lord Mahavir (Jain)." },
+
+                "2025-04-18": { "title": "Good Friday", "desc": "Christian observance of crucifixion of Jesus." },
+
+                "2025-05-01": { "title": "May Day / Labour Day", "desc": "International Workers’ Day." },
+
+                "2025-05-12": { "title": "Buddha Purnima", "desc": "Birth of Gautama Buddha." },
+
+                "2025-05-25": { "title": "Ramzan Eid (alternate observance)", "desc": "Another day for Eid al-Fitr in some places." },
+
+                "2025-06-07": { "title": "Bakrid / Eid al-Adha", "desc": "Festival of Sacrifice (Islamic)." },
+
+                "2025-07-06": { "title": "Muharram / Ashura", "desc": "Islamic New Year / day of remembrance." },
+
+                "2025-07-10": { "title": "Guru Purnima", "desc": "Honouring spiritual teachers." },
+
+                "2025-07-29": { "title": "Nag Panchami", "desc": "Worship of serpents." },
+
+                "2025-08-08": { "title": "Varalakshmi Vratam", "desc": "Vow to Goddess Lakshmi for welfare." },
+
+                "2025-08-09": { "title": "Raksha Bandhan", "desc": "Celebration of sibling bonds." },
+
+                "2025-08-15": { "title": "Independence Day", "desc": "National holiday: India’s independence." },
+
+                "2025-08-16": { "title": "Janmashtami", "desc": "Birth of Lord Krishna." },
+
+                "2025-08-27": { "title": "Ganesh Chaturthi", "desc": "Festival of Lord Ganesha." },
+
+                "2025-09-04": { "title": "Onam", "desc": "Kerala harvest festival." },
+
+                "2025-09-17": { "title": "Vishwakarma Puja", "desc": "Worship of Lord Vishwakarma." },
+
+                "2025-09-21": { "title": "Mahalaya Amavasya", "desc": "Beginning of Durga Puja festive period." },
+
+                "2025-09-22": { "title": "Navaratri Begins", "desc": "Nine nights worship of Goddess Durga." },
+
+                "2025-09-28": { "title": "Durga Puja (Start)", "desc": "Worship of Goddess Durga." },
+
+                "2025-10-01": { "title": "Maha Navami", "desc": "Ninth day of Durga festival." },
+
+                "2025-10-02": { "title": "Dussehra / Gandhi Jayanti", "desc": "Victory of good over evil + birth anniversary of Mahatma Gandhi." },
+
+                "2025-10-06": { "title": "Sharad Purnima", "desc": "Full moon festival." },
+
+                "2025-10-09": { "title": "Karwa Chauth", "desc": "Fasting by married women for husband's life." },
+
+                "2025-10-18": { "title": "Dhanteras", "desc": "First day of Diwali festival." },
+
+                "2025-10-20": { "title": "Diwali / Lakshmi Puja", "desc": "Festival of lights; worship of Goddess Lakshmi." },
+
+                "2025-10-21": { "title": "Bhai Dooj", "desc": "Festival of brother-sister bond." },
+
+                "2025-10-23": { "title": "Govardhan Puja / Annakut", "desc": "Offering to Lord Krishna." },
+
+                "2025-10-27": { "title": "Chhath Puja", "desc": "Sun worship festival (in some states)." },
+
+                "2025-11-05": { "title": "Guru Nanak Jayanti", "desc": "Birth anniversary of Guru Nanak Dev Ji." },
+
+                "2025-11-14": { "title": "Children’s Day", "desc": "Birth anniversary of Jawaharlal Nehru." },
+
+                "2025-11-25": { "title": "Gurpurab", "desc": "Alternate name for Sikh festival / Guru Nanak (depending on region)." },
+
+                "2025-12-01": { "title": "World AIDS Day", "desc": "Global awareness day." },
+
+                "2025-12-16": { "title": "Dhanu Sankranti", "desc": "Solar transition festival." },
+
+                "2025-12-25": { "title": "Christmas Day", "desc": "Christian holiday celebration of birth of Jesus." },
+
+                "2025-12-31": { "title": "New Year’s Eve", "desc": "Last day of the year." },
+
+
+                // --- Added academic activities for 5th semester (from the uploaded calendar image) ---
+
+                "2025-07-31": { "title": "TSD verification", "desc": "TSD verification (31/07/2025) - as shown on the calendar image." },
+
+                "2025-08-04": { "title": "Commencement of 5th & 7th Semester", "desc": "Start of odd semester (commencement)." },
+
+                "2025-08-14": { "title": "Workshop on Django", "desc": "Workshop (Django) — date seen on calendar." },
+
+                "2025-08-15": { "title": "Independence Day", "desc": "National holiday (already present)." },
+
+                "2025-08-22": { "title": "Workshop on IoT", "desc": "Workshop on IoT (calendar entry)." },
+
+                "2025-08-23": { "title": "Workshop on Github", "desc": "Workshop on GitHub (calendar entry)." },
+
+                "2025-08-27": { "title": "Varasiddhi Vinayaka Vrata / Academic Reviews", "desc": "Varasiddhi Vinayaka Vrata || Review of Non-Credit Mandatory Courses || AICTE Activity Point || Mini Project || Major Project Phase -III || Counselling || ERP Status (calendar groups these items around 27/30 Aug)." },
+
+                "2025-08-30": { "title": "Continuation: Project / Counselling / ERP Status", "desc": "Continuation of the project / review / counselling items (calendar shows 27,30 together)." },
+
+
+                "2025-09-05": { "title": "Eid-Milad || Teachers' Day", "desc": "Eid-Milad and Teachers' Day (calendar shows both on same row)." },
+
+                "2025-09-10": { "title": "Project Phase-I", "desc": "Project Phase-I (calendar shows project-phase events 10-13 Sep)." },
+
+                "2025-09-11": { "title": "Talk on IPR", "desc": "Talk on IPR (placed with project-phase timeframe)." },
+
+                "2025-09-12": { "title": "Parents Meet", "desc": "Parents meet (calendar shows 12/13 in that week)." },
+
+                "2025-09-13": { "title": "Project Phase-I (cont.)", "desc": "Continuation of project activities." },
+
+                "2025-09-15": { "title": "Engineer's Day / Blood Donation Camp / Workshop on cubes", "desc": "Multiple events grouped on/around 15 Sep." },
+
+
+                "2025-09-22": { "title": "IA-1 for 5th & 7th Semester / Alumni talk", "desc": "IA-1 and alumni talk (calendar shows IA-1 on 22-24 & 27 Sept)." },
+
+                "2025-09-23": { "title": "IA-1 (cont.)", "desc": "IA-1 continued." },
+
+                "2025-09-24": { "title": "IA-1 (cont.)", "desc": "IA-1 continued." },
+
+                "2025-09-27": { "title": "Alumni / IA review (cont.)", "desc": "Additional IA/Alumni day listed." },
+
+
+                "2025-09-30": { "title": "Reporting IA marks to Parents / Reviews", "desc": "Reporting IA marks to parents || Review of Non-Credit Mandatory Courses || AICTE Activity Point || Mini Project || Major Project Phase-II || Counselling || ERP Status (calendar shows these reporting/review items around end of Sept)." },
+
+
+                "2025-10-01": { "title": "Mahanavami / Ayudhapooja / Vijayadashami", "desc": "Mahanavami/Ayudhapooja/Vijayadashami (calendar row), also Gandhi Jayanti nearby." },
+
+                "2025-10-02": { "title": "Gandhi Jayanti / Dussehra", "desc": "Gandhi Jayanti + Dussehra (already present as festival)." },
+
+                "2025-10-07": { "title": "Maharshi Valmiki Jayanthi", "desc": "Celebration / industry-visit timeframe shown as 7/11 Oct." },
+
+                "2025-10-11": { "title": "Industry visit (Maharshi Valmiki jayanthi week)", "desc": "Industry visit noted around 11 Oct." },
+
+                "2025-10-17": { "title": "Workshop on Web Development", "desc": "Workshop on Web Development (calendar entry around mid-Oct)." },
+
+
+                "2025-10-20": { "title": "Naraka Chaturdashi / Balipadyami / Deepavali", "desc": "Festival days (calendar shows Naraka/Deepavali around 20/22/25 Oct) and Technical Talk on RPA." },
+
+                "2025-10-22": { "title": "Technical Talk on RPA (cont.)", "desc": "Technical talk / festival window." },
+
+                "2025-10-25": { "title": "Deepavali (cont.) / Technical", "desc": "Deepavali / related technical events (calendar shows 20,22,25 for related items)." },
+
+
+                "2025-10-30": { "title": "Alumni Meet / Review / Projects", "desc": "Alumni meet || Review of Non Credit Mandatory Courses || AICTE Activity Point || Mini Project || Major Project Phase-II || Counselling || ERP Status (calendar has this at 30-31 Oct)." },
+
+                "2025-10-31": { "title": "Alumni Meet (cont.)", "desc": "Continuation of Alumni/Review activities." },
+
+
+                "2025-11-01": { "title": "Kannada Rajyothsava", "desc": "Kannada Rajyothsava (calendar shows 1 Nov)." },
+
+                "2025-11-03": { "title": "Project Phase-II / Kanakadasa Jayanthi", "desc": "Project Phase-II and Kanakadasa Jayanthi (calendar shows 3-4 & 7-8 Nov groupings)." },
+
+                "2025-11-07": { "title": "Workshop on ReactJS", "desc": "Workshop on ReactJS (calendar lists 7/8 under workshops)." },
+
+                "2025-11-14": { "title": "How to write paper (talk)", "desc": "Research writing / paper talk roughly mid-November." },
+
+
+                "2025-11-24": { "title": "IA-2 for 5th & 7th Semester / Reviews", "desc": "IA-2 and review of non-credit mandatory courses (calendar shows IA-2 on 24-26 & 30 Nov)." },
+
+                "2025-11-25": { "title": "IA-2 (cont.)", "desc": "IA-2 continuation." },
+
+                "2025-11-26": { "title": "IA-2 (cont.)", "desc": "IA-2 continuation." },
+
+                "2025-11-30": { "title": "IA-2 (close / cont.)", "desc": "IA-2 / review continuation (calendar includes 30 Nov in that cluster)." },
+
+
+                "2025-12-01": { "title": "Reporting Final IA Marks to Parents / Last working day of 5th & 7th Semester", "desc": "Reporting final IA marks to parents and last working day (calendar shows reporting final IA marks and last working day near 1-4 Dec)." },
+
+                "2025-12-04": { "title": "Last working day (cont.)", "desc": "Last working day of 5th & 7th Semester (calendar shows 1-4 Dec cluster)." },
+
+
+                "2025-12-10": { "title": "TED verification begins", "desc": "TED verification window shown in image (10/12/25 - 19/12/25)." },
+
+                "2025-12-19": { "title": "TED verification ends", "desc": "End of TED verification period." }
+
+            },
+
+        };
+
+
+        // DOM refs
+
+        const monthYear = document.getElementById("monthYear");
+
+        const calendarDays = document.getElementById("calendarDays");
+
+        const prevBtn = document.getElementById("prevBtn");
+
+        const nextBtn = document.getElementById("nextBtn");
+
+        const todayBtn = document.getElementById("todayBtn");
+
+        const semButtons = document.querySelectorAll(".sem-btn");
+
+
+        // Modal refs
+
+        const modal = document.getElementById("eventModal");
+
+        const modalBox = document.getElementById("modalBox");
+
+        const eventTitle = document.getElementById("eventTitle");
+
+        const eventDesc = document.getElementById("eventDesc");
+
+        const closeModal = document.getElementById("closeModal");
+
+        const modalOk = document.getElementById("modalOk");
+
+
+        // State
+
+        let currentDate = new Date();
+
+        let currentSemester = "3"; // default
+
+
+        // Utility: format YYYY-MM-DD
+
+        function fmtDate(d) {
+
+            const y = d.getFullYear();
+
+            const m = String(d.getMonth() + 1).padStart(2, "0");
+
+            const day = String(d.getDate()).padStart(2, "0");
+
+            return `${y}-${m}-${day}`;
+
+        }
+
+
+        // Render calendar for currentDate & currentSemester
+
+        function renderCalendar() {
+
+            const year = currentDate.getFullYear();
+
+            const month = currentDate.getMonth();
+
+            const firstDay = new Date(year, month, 1);
+
+            const lastDay = new Date(year, month + 1, 0);
+
+            const startDay = firstDay.getDay();
+
+
+            monthYear.textContent = firstDay.toLocaleString("default", { month: "long", year: "numeric" });
+
+            calendarDays.innerHTML = "";
+
+
+            // empty slots before first day (preserve layout by adding invisible placeholders)
+
+            for (let i = 0; i < startDay; i++) {
+
+                const empty = document.createElement("div");
+
+                empty.className = "p-3 bg-transparent rounded-lg day-cell empty-cell";
+
+                empty.innerHTML = "&nbsp;"; // keep the box height
+
+                calendarDays.appendChild(empty);
+
+            }
+
+
+            // create each day
+
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+
+                const date = new Date(year, month, day);
+
+                const dateStr = fmtDate(date);
+
+                const hasEvent = events[currentSemester] && events[currentSemester][dateStr];
+
+
+                const dayDiv = document.createElement("div");
+
+                dayDiv.className = "p-3 bg-white rounded-lg shadow hover:bg-purple-50 cursor-pointer relative transition day-cell group";
+
+                if (hasEvent) {
+
+                    dayDiv.classList.add("bg-purple-100", "font-semibold");
+
+                }
+
+
+                // day number row
+
+                const num = document.createElement("div");
+
+                num.className = "text-left text-sm text-gray-700";
+
+                num.textContent = day;
+
+                dayDiv.appendChild(num);
+
+
+                // event title small (if event)
+
+                if (hasEvent) {
+
+                    const ev = document.createElement("div");
+
+                    ev.className = "mt-2 text-xs text-purple-800";
+
+                    ev.textContent = events[currentSemester][dateStr].title;
+
+                    dayDiv.appendChild(ev);
+
+                } else {
+
+                    // add an invisible spacer so cells are consistent height
+
+                    const spacer = document.createElement("div");
+
+                    spacer.className = "mt-2 text-xs text-transparent";
+
+                    spacer.innerHTML = "&nbsp;";
+
+                    dayDiv.appendChild(spacer);
+
+                }
+
+
+                // tooltip (visible on hover)
+
+                const tooltip = document.createElement("span");
+
+                tooltip.textContent = `Date: ${String(day).padStart(2, "0")}-${String(month + 1).padStart(2, "0")}-${year}`;
+
+                tooltip.className = "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 text-xs bg-gray-800 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition";
+
+                dayDiv.appendChild(tooltip);
+
+
+                // click opens modal if event exists
+
+                dayDiv.addEventListener("click", (e) => {
+
+                    if (hasEvent) {
+
+                        eventTitle.textContent = events[currentSemester][dateStr].title;
+
+                        eventDesc.textContent = events[currentSemester][dateStr].desc;
+
+                        modal.classList.remove("hidden");
+
+                        modal.classList.add("flex");
+
+                    }
+
+                });
+
+
+                calendarDays.appendChild(dayDiv);
+
+            }
+
+        }
+
+
+        // Navigation
+
+        prevBtn.addEventListener("click", () => {
+
+            currentDate.setMonth(currentDate.getMonth() - 1);
+
+            renderCalendar();
+
+        });
+
+        nextBtn.addEventListener("click", () => {
+
+            currentDate.setMonth(currentDate.getMonth() + 1);
+
+            renderCalendar();
+
+        });
+
+        todayBtn.addEventListener("click", () => {
+
+            currentDate = new Date();
+
+            renderCalendar();
+
+        });
+
+
+        // Semester switching + active state
+
+        semButtons.forEach(btn => {
+
+            btn.addEventListener("click", () => {
+
+                semButtons.forEach(b => b.classList.remove("sem-active", "bg-indigo-500", "text-white"));
+
+                btn.classList.add("sem-active", "bg-indigo-500", "text-white");
+
+                currentSemester = btn.getAttribute("data-sem");
+
+                renderCalendar();
+
+            });
+
+        });
+
+
+        // Modal: close handlers
+
+        function hideModal() {
+
+            modal.classList.add("hidden");
+
+            modal.classList.remove("flex");
+
+        }
+
+        closeModal.addEventListener("click", hideModal);
+
+        modalOk.addEventListener("click", hideModal);
+
+        // click outside modalBox closes modal
+
+        modal.addEventListener("click", (e) => {
+
+            if (e.target === modal) hideModal();
+
+        });
+
+
+        // initial render
+
+        renderCalendar();
+
+    </script>
+
+</body>
+
+
+</html>
+

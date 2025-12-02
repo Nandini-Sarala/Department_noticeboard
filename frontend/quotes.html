@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote of the Day — Engineers Inspire</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .quote-box {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 40px 50px;
+      max-width: 700px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .quote-icon {
+      font-size: 50px;
+      color: #00d4ff;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .quote-text {
+      font-size: 1.4rem;
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    .quote-author {
+      margin-top: 15px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #00d4ff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .quote-box {
+        padding: 30px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quote-box">
+    <span class="quote-icon">❝</span>
+    <p class="quote-text" id="quote"></p>
+    <p class="quote-author" id="author"></p>
+  </div>
+
+  <script>
+    const quotes = [
+      { text: "Scientists dream about doing great things. Engineers do them.", author: "James A. Michener" },
+      { text: "Dream, dream, dream. Dreams transform into thoughts and thoughts result in action.", author: "Dr. A. P. J. Abdul Kalam" },
+      { text: "Engineering is the closest thing to magic that exists in the world.", author: "Elon Musk" },
+      { text: "Excellence happens not by accident. It is a process.", author: "Dr. A. P. J. Abdul Kalam" },
+      { text: "The people who are crazy enough to think they can change the world are the ones who do.", author: "Steve Jobs" },
+      { text: "Technology is a useful servant but a dangerous master.", author: "Sam Pitroda" },
+      { text: "Innovation is seeing what everybody has seen and thinking what nobody has thought.", author: "Dr. Radhakrishnan" },
+      { text: "The engineer has been, and is, a maker of history.", author: "James Kip Finch" },
+      { text: "India’s future lies in the hands of its engineers.", author: "Sir M. Visvesvaraya" },
+      { text: "Failure is an option here. If things are not failing, you are not innovating enough.", author: "Elon Musk" }
+    ];
+
+    // Get today's index (0–9)
+    const today = new Date();
+    const index = today.getDate() % quotes.length;
+    const todayQuote = quotes[index];
+
+    document.getElementById("quote").innerText = todayQuote.text;
+    document.getElementById("author").innerText = "— " + todayQuote.author;
+  </script>
+
+</body>
+</html>

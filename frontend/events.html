@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events Notices</title>
+    <link rel="stylesheet" href="css_page.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+</head>
+
+<body class="bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-green-700 to-blue-700 text-white w-full  shadow-xl ">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex items-center space-x-4">
+            <i class="fas fa-file-alt fa-2x text-white"></i>
+            <h1 class="text-2xl font-bold tracking-wide">Events Notices</h1>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex items-center justify-center px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl w-full">
+            <a href="cultural.html" class="block">
+                <div
+                    class="bg-white rounded-3xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-2 hover:scale-105 p-10 border border-gray-100 text-center">
+                    <h2 class="text-3xl font-extrabold text-green-700 mb-6">Cultural Events</h2>
+                    <ul id="culturalNotices" class="space-y-3 text-gray-700"></ul>
+                    <p class="text-gray-600 text-lg">Stay tuned for updates on college fests, music shows, art
+                        exhibitions,
+                        and
+                        more!</p>
+                </div>
+            </a>
+
+            <!-- Technical Events Card -->
+            <a href="technical.html" class="block">
+                <div
+                    class="bg-white rounded-3xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-2 hover:scale-105 p-10 border border-gray-100 text-center">
+                    <h2 class="text-3xl font-extrabold text-green-700 mb-6">Technical Events</h2>
+                    <ul id="technicalNotices" class="space-y-3 text-gray-700"></ul>
+                    <p class="text-gray-600 text-lg">Get details about hackathons, coding contests, paper presentations,
+                        and
+                        seminars.</p>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Back Link -->
+    <div class="w-full flex justify-center mt-12 mb-8">
+        <a href="home.html" class="text-green-700 font-medium hover:underline text-lg">
+            ← Back to Notice Board
+        </a>
+    </div>
+
+    <!-- <script>
+        const noticesList = document.getElementById("noticesList");
+        const searchInput = document.getElementById("searchInput");
+
+        let notices = []; // Will hold cultural notices
+
+        // --- Render Notices ---
+        function renderNotices(filter = "") {
+            noticesList.innerHTML = "";
+
+            const filtered = notices.filter(n =>
+                n.title.toLowerCase().includes(filter.toLowerCase()) ||
+                n.description.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            if (filtered.length === 0) {
+                noticesList.innerHTML = "<p>No notices found.</p>";
+                return;
+            }
+
+            filtered.forEach(n => {
+                const li = document.createElement("li");
+                li.className = "notice-item";
+
+                
+
+                li.innerHTML = `<strong>${n.title}</strong>: ${n.description}`;
+
+                noticesList.appendChild(li);
+            });
+        }
+
+        async function loadNotices() {
+            try {
+                const res = await fetch("http://localhost:5000/api/notices/cultural");
+                notices = await res.json();
+                renderNotices();
+            } catch (err) {
+                console.error("Error loading notices:", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadNotices);
+
+
+      
+
+        async function loadCulturalNotices() {
+            try {
+                const res = await fetch("http://localhost:5000/api/notices");
+                const allNotices = await res.json();
+              
+                // Only cultural category
+                const culturalNotices = allNotices.filter(n => n.category === "cultural");
+
+                const container = document.getElementById("culturalNotices");
+                container.innerHTML = "";
+
+                culturalNotices.forEach(n => {
+                    const li = document.createElement("li");
+                    li.textContent = `${n.title} - ${n.description}`;
+                    container.appendChild(li);
+                });
+            } catch (err) {
+                console.error("Failed to load cultural notices:", err);
+               
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadCulturalNotices);
+
+
+      
+        // --- Search filter ---
+        searchInput.addEventListener("input", e => renderNotices(e.target.value));
+
+        // --- Initial load ---
+        document.addEventListener("DOMContentLoaded", loadNotices);
+       (filter.toLowerCase())
+       
+
+
+    </script> -->
+</body>
+
+</html>

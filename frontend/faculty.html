@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSE Faculty - KLS VDIT</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .faculty-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+    .name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #34495e;
+    }
+    .designation {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin: 5px 0;
+    }
+    .contact {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .contact a {
+      color: #2980b9;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Faculty of Computer Science & Engineering</h1>
+  <div id="faculty-container" class="faculty-grid"></div>
+
+  <script>
+    async function loadFaculty() {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/api/cse-faculty");
+        const data = await res.json();
+
+        if (data.status !== "success") {
+          document.getElementById("faculty-container").innerHTML = "<p>Failed to load faculty data.</p>";
+          return;
+        }
+
+        const container = document.getElementById("faculty-container");
+        container.innerHTML = "";
+
+        data.data.forEach(fac => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML = `
+            <img src="${fac.image || 'https://via.placeholder.com/120'}" alt="${fac.name}">
+            <div class="name">${fac.name}</div>
+            <div class="designation">${fac.designation}</div>
+            <div class="contact">
+              ${fac.email ? `<div>Email: <a href="mailto:${fac.email}">${fac.email}</a></div>` : ""}
+              ${fac.phone ? `<div>Phone: ${fac.phone}</div>` : ""}
+              ${fac.profile ? `<div><a href="${fac.profile}" target="_blank">Profile</a></div>` : ""}
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Error loading faculty:", err);
+      }
+    }
+
+    loadFaculty();
+  </script>
+</body>
+</html>

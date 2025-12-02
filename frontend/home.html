@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Department Notice Board</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+ 
+  <link rel="stylesheet" href="homestyle.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen felx flex-col" id="main-content" style="display:block;">
+  <div id="blur-overlay" class="fixed inset-0 bg-white/30 backdrop-blur-sm z-40 hidden"></div>
+
+  <div id="login-modal" class="modal active">
+    <form id="login-form" class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+      <h2 class="text-lg font-bold mb-4">Login</h2>
+      
+      <input type="text" id="login-usn" placeholder="USN (for Students)" required
+        class="w-full mb-4 p-2 border rounded">
+      <input type="date" id="login-password" placeholder="Password" required class="w-full mb-4 p-2 border rounded">
+
+     
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Login</button>
+
+      <div class="mt-2 text-center">
+        <a href="#" onclick="showAdminLogin()" class="text-purple-600 hover:underline text-sm">Admin Login</a>
+      </div>
+
+
+      <button type="button" class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl"
+        onclick="document.getElementById('login-modal').classList.remove('active'); setBlurOnMainContent(false);">
+        &times;
+      </button>
+    </form>
+  </div>
+  <div id="admin-login-modal" class="modal">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-gray-800">Admin Login</h3></br>
+
+        <!-- <h2 class="text-xl font-bold">Welcome Admin!</h2> -->
+        <p>Here you can manage users, timetables, and more.</p>
+        
+        <button onclick="showUserLogin()" class="text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+
+
+      </div>
+
+      <form id="admin-login-form">
+        <div class="space-y-4">
+          <div id="admin-section" class="hidden">
+           
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">admin-username</label>
+            <input type="text" id="admin-username" required
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          </div>
+         
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="date" id="admin-password" required
+              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          </div>
+
+
+        </div>
+        <!-- id="adminLoginBtn" -->
+
+        <button type="submit"
+          class="w-full mt-6 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors">
+          Log In as Admin
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+
+  <!-- <div id="mainContent" class="hidden"> -->
+  <!-- Navbarclass="bg-gradient-to-r from-blue-700 to-purple-700 text-white fixed w-full top-0 z-50 shadow-lg" -->
+  <nav class="bg-gradient-to-r from-blue-700 to-purple-700 text-white fixed w-full top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-6">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo and Title -->
+        <div class="flex items-center space-x-3">
+          <img src="klsvdit_logo.jpeg" alt="College Logo" class="h-12 w-12 rounded-md border-2 border-white/30" />
+          <div class="hidden sm:block">
+            <h1 class="text-2xl font-semibold tracking-wide">
+              Department Notice Board
+            </h1>
+            <p class="text-xs text-blue-200 opacity-90">
+              Computer Science & Engineering
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div id="visionMissionModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-xl w-full relative">
+              <button id="closeVisionModal"
+                class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">&times;</button>
+              <h2 class="text-2xl font-semibold mb-4 text-center">Vision & Mission</h2>
+
+              <!-- Vision -->
+              <div class="mb-4">
+                <h3 class="text-xl font-semibold text-blue-600 mb-2">Vision</h3>
+                <ul class="text-gray-700 space-y-2">"To be recognized as a premier institution in engineering education,
+                  research and innovation."</ul>
+
+                <!-- Vision will be inserted here -->
+                </p>
+              </div>
+
+              <!-- Mission -->
+              <div>
+                <h3 class="text-xl font-semibold text-green-600 mb-2">Mission</h3>
+               
+                <!-- Mission will be inserted here -->
+                <ul class="text-gray-700 space-y-2"> "To impart quality technical education with strong
+                  fundamentals."<br>
+                  "To nurture creativity, innovation and entrepreneurship."<br>
+                  "To instill ethical values and leadership qualities in students."<br>
+                  "To promote research and development for societal needs."</ul>
+                <!-- </ul> -->
+              </div>
+
+
+            </div>
+
+          </div>
+
+
+         
+          
+          <div class="relative inline-block text-left">
+            <!-- Menu Button -->
+            <button id="menuButton" aria-label="Menu"
+              class="p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-md transition duration-200 shadow-md">
+              <i class="fas fa-ellipsis-v text-white text-lg"></i>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="dropdownMenu"
+              class="hidden absolute right-0 mt-3 w-72 bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-100 overflow-hidden transition-all transform origin-top-right scale-95 opacity-0">
+
+              <!-- Profile Section -->
+              <div class="p-4 border-t border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                  <i class="fas fa-user-circle text-blue-600 text-3xl"></i>
+                  <div>
+                    <span class="font-semibold text-gray-900">Profile</span>
+                    <div id="profile-usn" class="text-xs text-gray-500">User: </div>
+                    <div id="profile-password" class="text-xs text-gray-500"> </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!-- HOD Info -->
+              <div class="p-4 border-t border-b border-gray-100">
+                <div class="flex items-center space-x-3">
+                  <i class="fas fa-user-tie text-indigo-600 text-xl"></i>
+                  <div>
+                    <span class="font-semibold text-gray-900">Dr. Venkathesh Shankar</span>
+                    <div class="text-xs text-gray-500">HOD, CSE Dept.</div>
+                    <div class="text-xs text-gray-500">hodcse@klsvdit.edu.in</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Vision & Mission -->
+              <a href="#" id="visionLink"
+                class="block px-4 py-3 text-gray-700 hover:bg-green-50 flex items-center space-x-3 transition">
+                <i class="fas fa-eye text-green-600 w-5"></i>
+                <span>Vision & Mission</span>
+              </a>
+
+              
+
+              <!-- Logout -->
+              <a href="#"
+                class="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 flex items-center space-x-3 transition">
+                <i class="fas fa-sign-out-alt text-red-600 w-5"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+  </nav>
+  <!-- </nav> -->
+
+  <!-- Spacer for fixed navbar -->
+  <div class="h-16"></div>
+
+  <!-- Image Slider -->
+  <section class="slider">
+    <div class="slides" id="slides">
+      <div class="slide" style="background-image: url('college.jpg')"></div>
+      <!-- <div class="slide" style="background-image: url('faculty.jpeg')"></div> -->s
+      <div class="slide" style="background-image: url('facultydept.PNG')"></div>
+      <div class="slide" style="background-image: url('lab1.PNG')"></div>
+      <!--<div class="slide" style="background-image: url('vditimg.jpg')"></div>-->
+    </div>
+
+  </section>
+  
+
+
+  <!-- Recent Notices marquee -->
+  <section class="max-w-7xl mx-auto px-4 mt-8">
+    <div class="marquee-container" aria-label="Recent Notices">
+      <div class="marquee-content" id="recentNotices">
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Info Boxes -->
+  <section class="max-w-7xl mx-auto px-4 mt-8 mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" aria-label="Department Information Sections">
+      <a href="events.html" tabindex="0"
+        class="info-box bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition transform duration-300">
+        <div class="flex items-center space-x-3 mb-3 text-blue-600">
+          <i class="fas fa-theater-masks fa-2x"></i>
+          <h3 class="text-xl font-semibold">Events</h3>
+        </div>
+        <p class="text-gray-600 text-sm">
+          Stay updated on upcoming cultural fests, competitions, and celebrations.
+        </p>
+      </a>
+      <!-- href="exam-schedule.html" -->
+      <a href="exam_schedule.html" id="exambtn" tabindex="0"
+        class="info-box bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition transform duration-300 block">
+        <div class="flex items-center space-x-3 mb-3 text-green-600">
+          <i class="fas fa-file-alt fa-2x"></i>
+          <h3 class="text-xl font-semibold">Exam Schedule</h3>
+        </div>
+        <p class="text-gray-600 text-sm">
+          Check the latest exam dates, venues, and guidelines for all courses.
+        </p>
+      </a>
+
+      <a href="achievements.html" tabindex="0"
+        class="info-box bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition transform duration-300">
+        <div class="flex items-center space-x-3 mb-3 text-yellow-600">
+          <i class="fas fa-trophy fa-2x"></i>
+          <h3 class="text-xl font-semibold">Achievements</h3>
+        </div>
+        <p class="text-gray-600 text-sm">
+          Explore our students' and faculty's awards, honors, and outstanding accomplishments.
+        </p>
+      </a>
+
+      <a href="calendar.html" tabindex="0"
+        class="info-box bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition transform duration-300">
+        <div class="flex items-center space-x-3 mb-3 text-purple-600">
+          <i class="fas fa-calendar-alt fa-2x"></i>
+          <h3 class="text-xl font-semibold">Calendar</h3>
+        </div>
+        <p class="text-gray-600 text-sm">
+          View the academic calendar including holidays, events, and deadlines.
+        </p>
+      </a>
+
+      <a href="t&p.html" tabindex="0"
+        class="info-box bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition transform duration-300">
+        <div class="flex items-center space-x-3 mb-3 text-red-600">
+          <i class="fas fa-briefcase fa-2x"></i>
+          <h3 class="text-xl font-semibold">Training & Placement</h3>
+        </div>
+        <p class="text-gray-600 text-sm">
+          Get information on placement drives, internships, and training programs.
+        </p>
+      </a>
+
+      <a href="faculty.html" tabindex="0"
+        class="info-box bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition transform duration-300">
+        <div class="flex items-center space-x-3 mb-3 text-indigo-600">
+          <i class="fas fa-users fa-2x"></i>
+          <h3 class="text-xl font-semibold">Faculty Information</h3>
+        </div>
+        <p class="text-gray-600 text-sm">
+          Learn about our experienced faculty members and their expertise.
+        </p>
+      </a>
+      <div id="noticeModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative">
+          <button id="closeNoticeModal"
+            class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">&times;</button>
+          <h2 class="text-xl font-semibold mb-4" id="noticeModalTitle"></h2>
+          <p class="text-gray-700" id="noticeModalText"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="flex justify-center items-center py-12">
+    <div
+      class="quote-box text-center bg-white/10 border border-white/20 rounded-2xl p-8 max-w-3xl shadow-xl backdrop-blur-md animate-fadeIn">
+      <span class="quote-icon text-5xl text-cyan-400 mb-4 block">❝</span>
+      <p class="quote-text text-lg md:text-xl italic leading-relaxed" id="quote"></p>
+      <p class="quote-author mt-4 font-semibold text-cyan-300" id="author"></p>
+    </div>
+  </section>
+  <!-- </div> -->
+  <!-- Floating Add Notice Button -->
+  <button id="addNoticeBtn"
+    class="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700">
+    <i class="fas fa-plus text-xl"></i>
+  </button>
+
+  <!-- Add Notice Modal -->
+  <div id="addNoticeModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative">
+      <button id="closeAddNoticeModal"
+        class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Add New Notice</h2>
+      <input type="text" id="noticeTitle" placeholder="Notice Title" class="w-full mb-3 p-2 border rounded-md">
+      <textarea id="noticeDescription" placeholder="Description" class="w-full mb-3 p-2 border rounded-md"></textarea>
+      <select id="noticeSemester"
+        class="w-full mb-4 p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400">
+        <option value="">-- Select Semester (Optional) --</option>
+        <option value="sem3">2nd Year - 3rd Semester</option>
+        <option value="sem4">2nd Year - 4th Semester</option>
+        <option value="sem5">3rd Year - 5th Semester</option>
+        <option value="sem6">3rd Year - 6th Semester</option>
+        <option value="sem7">4th Year - 7th Semester</option>
+        <option value="sem8">4th Year - 8th Semester</option>
+      </select>
+      <input type="file" id="noticeImage" placeholder="Image URL (optional)" class="w-full mb-4 p-3 border rounded-xl">
+      <input type="date" id="noticeExpiry" class="w-full mb-4 p-3 border rounded-xl">
+      <button id="submitNotice" type="button"
+        class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Submit</button>
+
+
+    </div>
+  </div>
+  <!-- Add a container for new notices -->
+  <ul id="culturalNotices"></ul>
+  <!-- Footer -->
+<footer class="bg-gradient-to-r from-indigo-900 via-purple-800 to-blue-900 text-gray-200 py-6 mt-12 shadow-inner">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm">
+
+    <!-- 🌟 College Info -->
+    <div class="text-center md:text-left mb-3 md:mb-0">
+      <h2 class="text-xl font-bold text-white">KLS VDIT</h2>
+      <p class="text-gray-300 text-xs italic">AI-Powered Department Notice Board</p>
+    </div>
+
+    <!-- 📞 Contact Info -->
+    <div class="flex flex-col md:flex-row items-center gap-4 text-gray-300 text-xs">
+      <a href="mailto:cse@klsvdit.edu.in" class="flex items-center gap-1 hover:text-white transition">
+        <i class="fas fa-envelope text-purple-300"></i> cse@klsvdit.edu.in
+      </a>
+      <a href="https://klsvdit.edu.in/" target="_blank" class="flex items-center gap-1 hover:text-white transition">
+        <i class="fas fa-globe text-purple-300"></i> www.klsvdit.edu.in
+      </a>
+      <a href="https://klsvdit.edu.in/contact-2/" target="_blank" class="flex items-center gap-1 hover:text-white transition">
+        <i class="fas fa-phone text-purple-300"></i> +91-8332-229785
+      </a>
+    </div>
+
+    <!-- 🎓 Student Credits -->
+    <div class="text-center md:text-right mt-3 md:mt-0 text-gray-300 text-xs leading-relaxed">
+      <p class="font-semibold text-purple-200 mb-1">Project Contributors:</p>
+      <p>
+        Anusha Hukkeri &nbsp;|&nbsp;
+        Kanishka Gurav &nbsp;|&nbsp;
+        Nagaveni Desai &nbsp;|&nbsp;
+        Nandini Sarala
+      </p>
+      <p class="text-gray-400 mt-1">&copy; 2025 KLS VDIT. All Rights Reserved.</p>
+    </div>
+
+  </div>
+</footer>
+
+
+
+
+
+
+  <script src="homee.js"></script>
+</body>
+
+</html>

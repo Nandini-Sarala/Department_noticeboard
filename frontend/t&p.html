@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Training & Placement Notices</title>
+    <link rel="stylesheet" href="css_page.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center">
+    <nav class="bg-gradient-to-r from-red-600 to-orange-600 text-white w-full top-0 z-50 shadow-lg mb-8">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center space-x-4">
+            <i class="fas fa-briefcase fa-2x text-white"></i>
+            <h1 class="text-2xl font-semibold tracking-wide">Training & Placement Notices</h1>
+        </div>
+    </nav>
+    <main class="w-full max-w-4xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Training Container -->
+        <section id="trainingContainer" class="bg-white rounded-lg shadow p-6 flex flex-col cursor-pointer group">
+            <h2 class="text-xl font-bold mb-4 text-red-700 select-none">Training</h2>
+            <div id="trainingContent" class="hidden flex-col">
+                <div class="flex items-center gap-4 mb-4">
+                    <input id="trainingSearchInput" type="text" placeholder="Search training notices..."
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500" />
+                    <button id="trainingSearchBtn"
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Search</button>
+                </div>
+                <!-- <ul id="trainingNoticesList" class="space-y-3"></ul> -->
+            </div>
+        </section>
+        <!-- Placement Container -->
+        <section id="placementContainer" class="bg-white rounded-lg shadow p-6 flex flex-col cursor-pointer group">
+            <h2 class="text-xl font-bold mb-4 text-orange-700 select-none">Placement</h2>
+            <div id="placementContent" class="hidden flex-col">
+                <div class="flex items-center gap-4 mb-4">
+                    <input id="placementSearchInput" type="text" placeholder="Search placement notices..."
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500" />
+                    <button id="placementSearchBtn"
+                        class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">Search</button>
+                </div>
+                <!-- <ul id="placementNoticesList" class="space-y-3"></ul> -->
+            </div>
+        </section>
+    </main>
+    <a href="home.html" class="mt-8 text-red-700 hover:underline">← Back to Notice Board</a>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('trainingContainer').addEventListener('click', function () {
+                window.location.href = "training.html";
+            });
+            document.getElementById('placementContainer').addEventListener('click', function () {
+                window.location.href = "placement.html";
+            });
+        });
+    </script>
+</body>
+</html>
