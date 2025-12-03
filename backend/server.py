@@ -152,19 +152,29 @@ def predict_category(title, description, semester):
             return f"exam_ia{sem_num}" if sem_num else "exam_ia"
         else:
             return f"exam_sem{sem_num}" if sem_num else "exam_sem"
+    if any(w in combined_text for w in ["placement", "recruitment", "drive", "hiring"]):
+        return "placement"
+    if any(w in combined_text for w in ["hackathon", "coding", "technical", "workshop"]):
+        return "technical"
+    if any(w in combined_text for w in ["award", "scholarship", "achievement", "prize"]):
+        return "achievements"
+    
+    if any(w in combined_text for w in ["music", "fest", "drama", "cultural", "dance"]):
+        return "cultural"
+
 
     try:
         X = vectorizer.transform([combined_text])
         return model.predict(X)[0]
     except Exception:
-        if any(w in combined_text for w in ["placement", "recruitment", "drive", "hiring"]):
-            return "placement"
-        if any(w in combined_text for w in ["hackathon", "coding", "technical", "workshop"]):
-            return "technical"
-        if any(w in combined_text for w in ["music", "fest", "drama", "cultural", "dance"]):
-            return "cultural"
-        if any(w in combined_text for w in ["award", "scholarship", "achievement", "prize"]):
-            return "achievements"
+        # if any(w in combined_text for w in ["placement", "recruitment", "drive", "hiring"]):
+        #     return "placement"
+        # if any(w in combined_text for w in ["hackathon", "coding", "technical", "workshop"]):
+        #     return "technical"
+        # if any(w in combined_text for w in ["music", "fest", "drama", "cultural", "dance"]):
+        #     return "cultural"
+        # if any(w in combined_text for w in ["award", "scholarship", "achievement", "prize"]):
+        #     return "achievements"
         return "general"
 
 # -----------------------
@@ -268,7 +278,7 @@ def add_notice():
             existing = cursor.fetchone()
             if existing:
                 cursor.execute(
-                    """UPDATE notices SET title=%s, description=%s, expiry_date=%s, image_url=%s WHERE id=%s""",
+                    """UPDATE notice SET title=%s, description=%s, expiry_date=%s, image_url=%s WHERE id=%s""",
                     (title, description, expiry_date, image_url or existing["image_url"], existing["id"])
                 )
                 conn.commit()
