@@ -135,32 +135,19 @@
 
 
 
-        // async function loadExamNoticesForSemester(semKey) {
-        //     //semKey like "sem3"
-        //     const possibleCats = [`exam_${semKey}`, `exam_iasem${semKey.replace("sem", "")}`, `exam_semsem${semKey.replace("sem", "")}`];
-        //     let notices = [];
-
-        //     for (const cat of possibleCats) {
-        //         try {
-        //             const res = await fetch(`http://127.0.0.1:5000/api/notices/${cat}`);
-        //             const data = await res.json();
-        //             if (Array.isArray(data) && data.length) {
-        //                 notices = data;
-        //                 break;
-        //             }
-        //         } catch (err) {
-        //             console.error("Error fetching", cat, err);
-        //         }
-        //     }
-
-        //     return notices;
-        // }
         async function loadExamNoticesForSemester(semKey) {
+            // const possibleCats = [
+            //     `exam_${semKey}`,
+            //     `exam_iasem${semKey.replace("sem", "")}`,
+            //     `exam_semsem${semKey.replace("sem", "")}`
+            // ];
+            const num = semKey.replace("sem", "");
+
             const possibleCats = [
-                `exam_${semKey}`,
-                `exam_iasem${semKey.replace("sem", "")}`,
-                `exam_semsem${semKey.replace("sem", "")}`
+                `exam_iasem${num}`,      // correct
+                `exam_semsem${num}`      // correct
             ];
+
             let notices = [];
 
             for (const cat of possibleCats) {
