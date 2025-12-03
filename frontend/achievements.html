@@ -31,7 +31,7 @@
 
         async function loadAchievements() {
             try {
-                const res = await fetch("http://127.0.0.1:5000/api/notices/achievements");
+                const res = await fetch("https://department-noticeboard-4.onrender.com/api/notices/achievements");
                 const data = await res.json();
                 renderAchievements(data);
             } catch (err) {
@@ -63,7 +63,7 @@
                 // Image (if present)
                 if (ach.image_url) {
                     const img = document.createElement("img");
-                    img.src = `http://127.0.0.1:5000${ach.image_url}`;
+                    img.src = `https://department-noticeboard-4.onrender.com${ach.image_url}`;
                     img.alt = "Achievement Image";
                     img.className = "w-full h-64 object-contain rounded-lg mb-4";
                     li.appendChild(img);
@@ -91,7 +91,7 @@
 
             searchBtn.addEventListener("click", () => {
                 const filter = searchInput.value.trim();
-                fetch("http://127.0.0.1:5000/api/notices/achievements")
+                fetch("https://department-noticeboard-4.onrender.com/api/notices/achievements")
                     .then((res) => res.json())
                     .then((data) => renderAchievements(data, filter))
                     .catch((err) => console.error(err));
@@ -101,7 +101,7 @@
             searchInput.addEventListener("input", async (e) => {
                 const filter = e.target.value.trim();
                 try {
-                    const res = await fetch("http://127.0.0.1:5000/api/notices/achievements");
+                    const res = await fetch("https://department-noticeboard-4.onrender.com/api/notices/achievements");
                     const data = await res.json();
                     renderAchievements(data, filter);
                 } catch (err) {

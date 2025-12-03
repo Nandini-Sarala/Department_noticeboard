@@ -65,7 +65,7 @@
   <script>
     async function loadFaculty() {
       try {
-        const res = await fetch("http://127.0.0.1:5000/api/cse-faculty");
+        const res = await fetch("https://department-noticeboard-4.onrender.com/api/cse-faculty");
         const data = await res.json();
 
         if (data.status !== "success") {
@@ -81,7 +81,7 @@
           card.className = "card";
 
           card.innerHTML = `
-            <img src="${fac.image || 'https://via.placeholder.com/120'}" alt="${fac.name}">
+            <img src="${fac.image || 'https://department-noticeboard-4.onrender.com/120'}" alt="${fac.name}">
             <div class="name">${fac.name}</div>
             <div class="designation">${fac.designation}</div>
             <div class="contact">

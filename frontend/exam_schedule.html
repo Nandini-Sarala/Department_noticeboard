@@ -165,7 +165,7 @@
 
             for (const cat of possibleCats) {
                 try {
-                    const res = await fetch(`http://127.0.0.1:5000/api/notices/${cat}`);
+                    const res = await fetch(`https://department-noticeboard-4.onrender.com/api/notices/${cat}`);
                     const data = await res.json();
                     if (Array.isArray(data) && data.length) {
                         notices = notices.concat(data); // collect all
@@ -229,7 +229,7 @@
         showIA.addEventListener("click", () => {
             if (currentSemIA && currentSemIA.image_url) {
                 // open file
-                window.open(`http://127.0.0.1:5000${currentSemIA.image_url}`, "_blank");
+                window.open(`https://department-noticeboard-4.onrender.com${currentSemIA.image_url}`, "_blank");
             } else {
                 alert("IA timetable not uploaded.");
             }
@@ -238,7 +238,7 @@
         // Sem click (similar)
         showSem.addEventListener("click", () => {
             if (currentSemSem && currentSemSem.image_url) {
-                window.open(`http://127.0.0.1:5000${currentSemSem.image_url}`, "_blank");
+                window.open(`https://department-noticeboard-4.onrender.com${currentSemSem.image_url}`, "_blank");
             } else {
                 alert("Semester timetable not uploaded.");
             }
@@ -275,9 +275,9 @@
             modal.classList.remove("hidden");
 
             if (type === "ia" && currentSemIA && currentSemIA.image_url) {
-                window.open(`http://127.0.0.1:5000${currentSemIA.image_url}`, "_blank");
+                window.open(`https://department-noticeboard-4.onrender.com${currentSemIA.image_url}`, "_blank");
             } else if (type === "sem" && currentSemSem && currentSemSem.image_url) {
-                window.open(`http://127.0.0.1:5000${currentSemSem.image_url}`, "_blank");
+                window.open(`https://department-noticeboard-4.onrender.com${currentSemSem.image_url}`, "_blank");
             } else {
                 alert(`No ${type.toUpperCase()} timetable uploaded for ${semKey}.`);
             }
